@@ -1,5 +1,6 @@
 package com.mobbacs.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -13,7 +14,7 @@ import com.mobbacs.models.User
 import com.mobbacs.database.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import com.mobbacs.database.UserRepository
-import kotlinx.coroutines.Dispatchers
+import com.mobbacs.login.LoginActivity
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
 
@@ -38,7 +39,13 @@ class RegisterActivity: AppCompatActivity() {
         val email = findViewById<EditText>(R.id.editEmail)
         val senha = findViewById<EditText>(R.id.editSenha)
         val cpf = findViewById<EditText>(R.id.editCPF)
-        val bntRegister = findViewById<Button>(R.id.bntRegister)
+        val bntRegister = findViewById<Button>(R.id.buttonRegister)
+        val bntLinkL = findViewById<Button>(R.id.buttonLinkLogin)
+
+        bntLinkL.setOnClickListener {
+            val intent = Intent(this, LoginActivity()::class.java)
+            startActivity(intent)
+        }
 
         bntRegister.setOnClickListener {
             val nomeUsuario = nome.text.toString()

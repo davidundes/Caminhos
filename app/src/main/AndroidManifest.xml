@@ -32,6 +32,8 @@
 
         <activity android:name="com.mobbacs.login.LoginActivity"
             android:exported="false" />
+        <activity android:name="com.mobbacs.home.HomeActivity"
+            android:exported="false"/>
 
     </application>
 

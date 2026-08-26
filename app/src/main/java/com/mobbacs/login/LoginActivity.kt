@@ -1,5 +1,6 @@
 package com.mobbacs.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.mobbacs.R
 import com.mobbacs.database.SupabaseClient
+import com.mobbacs.home.HomeActivity
+import com.mobbacs.register.RegisterActivity
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -20,6 +23,7 @@ class LoginActivity: AppCompatActivity() {
         SupabaseClient.client.auth.signInWith(Email){
             this.email = email
             this.password = senha
+
         }
     }
 
@@ -32,6 +36,13 @@ class LoginActivity: AppCompatActivity() {
         val email = findViewById<EditText>(R.id.loginEmail)
         val senha = findViewById<EditText>(R.id.loginSenha)
         val bntLogin = findViewById<Button>(R.id.buttonLogin)
+        val bntLinkR = findViewById<Button>(R.id.buttonLinkRegister)
+
+        bntLinkR.setOnClickListener {
+            val intent = Intent(this, RegisterActivity()::class.java)
+            startActivity(intent)
+        }
+
 
         bntLogin.setOnClickListener {
             val emailUsuario = email.text.toString()
@@ -42,6 +53,8 @@ class LoginActivity: AppCompatActivity() {
                     login(emailUsuario, senhaUsuario)
 
                     Toast.makeText(this@LoginActivity ,"Logou", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                    startActivity(intent)
                 }catch (e: Exception){
                     Toast.makeText(this@LoginActivity, "Não logou", Toast.LENGTH_LONG).show()
                     Log.e("SUPABASE_TESTE", "${e.message}")
