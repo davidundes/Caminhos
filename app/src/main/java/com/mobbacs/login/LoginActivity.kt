@@ -17,13 +17,13 @@ import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
 
+
 class LoginActivity: AppCompatActivity() {
 
     suspend fun login(email: String, senha: String){
         SupabaseClient.client.auth.signInWith(Email){
             this.email = email
             this.password = senha
-
         }
     }
 
@@ -43,7 +43,6 @@ class LoginActivity: AppCompatActivity() {
             startActivity(intent)
         }
 
-
         bntLogin.setOnClickListener {
             val emailUsuario = email.text.toString()
             val senhaUsuario = senha.text.toString()
@@ -51,19 +50,21 @@ class LoginActivity: AppCompatActivity() {
             lifecycleScope.launch() {
                 try{
                     login(emailUsuario, senhaUsuario)
-
-                    Toast.makeText(this@LoginActivity ,"Logou", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@LoginActivity ,"Login efetuado com sucesso!",
+                        Toast.LENGTH_LONG
+                    ).show()
                     val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                     startActivity(intent)
-                }catch (e: Exception){
-                    Toast.makeText(this@LoginActivity, "Não logou", Toast.LENGTH_LONG).show()
+                } catch (e: Exception){
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Senha ou/e Email inválidos!",
+                        Toast.LENGTH_LONG
+                    ).show()
                     Log.e("SUPABASE_TESTE", "${e.message}")
                 }
             }
-
         }
-
     }
-
-
 }

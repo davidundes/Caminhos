@@ -53,13 +53,9 @@ class RegisterActivity: AppCompatActivity() {
             val senhaUsuario = senha.text.toString()
             val cpfUsuario = cpf.text.toString()
 
-            if(nomeUsuario.isEmpty() || emailUsuario.isEmpty() || senhaUsuario.isEmpty() || cpfUsuario.isEmpty())
-            {
-                Toast.makeText(this, "Escreva vagabundo", Toast.LENGTH_SHORT).show()
-            }
-            else{
-
-
+            if(nomeUsuario.isEmpty() || emailUsuario.isEmpty() || senhaUsuario.isEmpty() || cpfUsuario.isEmpty()){
+                Toast.makeText(this, "Digite um valor válido!", Toast.LENGTH_SHORT).show()
+            } else{
                 lifecycleScope.launch() {
                     try {
                         cadastrar(emailUsuario, senhaUsuario)
@@ -79,19 +75,14 @@ class RegisterActivity: AppCompatActivity() {
                     } catch (e: Exception){
                         Toast.makeText(
                             this@RegisterActivity,
-                            "Usuário cadastrado com fracasso hahahahahahahah!",
+                            "Usuário cadastrado com fracasso!",
                             Toast.LENGTH_LONG
                         ).show()
                          Log.e("SUPABASE_TESTE", "${e.message}")
 
-                }}
-
-
-
-
+                    }
+                }
             }
         }
-
     }
-
 }
