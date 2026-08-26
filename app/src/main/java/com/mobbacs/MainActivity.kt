@@ -1,6 +1,7 @@
 package com.mobbacs
 
 import com.mobbacs.register.RegisterActivity
+import com.mobbacs.login.LoginActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val intent = Intent(this, RegisterActivity()::class.java)
+        val intent = Intent(this, LoginActivity()::class.java)
         startActivity(intent)
 
         super.onCreate(savedInstanceState)

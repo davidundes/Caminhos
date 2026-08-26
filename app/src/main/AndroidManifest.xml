@@ -30,6 +30,9 @@
             android:name="com.mobbacs.register.RegisterActivity"
             android:exported="false" />
 
+        <activity android:name="com.mobbacs.login.LoginActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
