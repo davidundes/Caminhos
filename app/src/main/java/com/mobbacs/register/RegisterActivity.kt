@@ -43,8 +43,7 @@ class RegisterActivity: AppCompatActivity() {
         val bntLinkL = findViewById<Button>(R.id.buttonLinkLogin)
 
         bntLinkL.setOnClickListener {
-            val intent = Intent(this, LoginActivity()::class.java)
-            startActivity(intent)
+            finish()
         }
 
         bntRegister.setOnClickListener {
