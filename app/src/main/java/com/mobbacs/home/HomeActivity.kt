@@ -2,9 +2,12 @@ package com.mobbacs.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mobbacs.R
+import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
@@ -13,9 +16,20 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
-class HomeActivity: AppCompatActivity() {
+import com.mobbacs.database.Repository
+import com.mobbacs.models.Local
 
-    private fun adicionarPonto(mapa: MapView, latitude: Double, longitude: Double){
+class HomeActivity: AppCompatActivity() {
+    private val localRepository = Repository.LocalRepository()
+
+    private fun adicionarPonto(
+        mapa: MapView,
+        latitude: Double,
+        longitude: Double,
+        titulo: String,
+        subtitulo: String,
+        descricao: String)
+    {
         val marcador = Marker(mapa).apply {
             position = GeoPoint(latitude, longitude)
             setAnchor(
@@ -23,16 +37,15 @@ class HomeActivity: AppCompatActivity() {
                 Marker.ANCHOR_BOTTOM
             )
 
-            title = "IFSP JCR"
-            snippet = "IFSP CAMPUS DE JACAREI"
-
-            subDescription = "Rua Antonio fogaça de almeida, 200 - jardim america"
+            title = titulo
+            snippet = subtitulo
+            subDescription = descricao
 
             setPanToView(false)
 
             setOnMarkerClickListener { ponto, mapView ->
                 if (ponto.isInfoWindowShown) {
-                ponto.closeInfoWindow()
+                    ponto.closeInfoWindow()
                 }else {
                     ponto.showInfoWindow()
                 }
@@ -62,6 +75,32 @@ class HomeActivity: AppCompatActivity() {
         marcador.isEnabled = mapa.zoomLevel >= 17.0
         mapa.invalidate()
     }
+    private fun carregarLocaisDoBanco() {
+        Log.d("HomeActivity", "carregarLocaisDoBanco: iniciando busca no Supabase")
+        lifecycleScope.launch {
+            try {
+                val locais: List<Local> = localRepository.getAllLocais()
+                Log.d("HomeActivity", "carregarLocaisDoBanco: ${locais.size} local(is) retornado(s)")
+
+                locais.forEach { local ->
+                    Log.d(
+                        "HomeActivity",
+                        "Adicionando marcador '${local.nome}' em (${local.latitude}, ${local.longitude})"
+                    )
+                    adicionarPonto(
+                        map,
+                        local.latitude,
+                        local.longitude,
+                        local.nome,
+                        local.endereco,
+                        local.horario
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("HomeActivity", "Erro ao buscar locais do Supabase", e)
+            }
+        }
+    }
 
     private lateinit var map: MapView
     @SuppressLint("MissingInflatedId")
@@ -78,7 +117,7 @@ class HomeActivity: AppCompatActivity() {
 
         map = findViewById(R.id.map)
 
-        val jacarei  = GeoPoint(-23.3053,-54.9658)
+        val jacarei  = GeoPoint(-23.3053,-45.9658)
 
         map.controller.setCenter(jacarei)
         map.controller.setZoom(13.5)
@@ -93,7 +132,7 @@ class HomeActivity: AppCompatActivity() {
         map = findViewById(R.id.map)
         map.setMultiTouchControls(true)
 
-        adicionarPonto(map ,-23.3172, -45.9841)
+        carregarLocaisDoBanco()
 
     }
 

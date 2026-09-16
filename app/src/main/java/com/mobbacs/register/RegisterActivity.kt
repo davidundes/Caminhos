@@ -13,7 +13,7 @@ import com.mobbacs.R
 import com.mobbacs.models.User
 import com.mobbacs.database.SupabaseClient
 import io.github.jan.supabase.auth.auth
-import com.mobbacs.database.UserRepository
+import com.mobbacs.database.Repository
 import com.mobbacs.login.LoginActivity
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -33,7 +33,7 @@ class RegisterActivity: AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.register_conta)
 
-        val userRepository = UserRepository()
+        val userRepository = Repository.UserRepository()
 
         val nome = findViewById<EditText>(R.id.editNome)
         val email = findViewById<EditText>(R.id.editEmail)

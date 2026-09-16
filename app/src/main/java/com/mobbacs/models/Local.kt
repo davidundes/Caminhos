@@ -7,8 +7,8 @@ data class Local(
     val nome: String,
     val endereco: String,
     val cep: String,
-    val latitude: String,
-    val longitude: String,
-    val telofone: String,
+    val latitude: Double,
+    val longitude: Double,
+    val telofone: String? = null,
     val horario: String
 )
