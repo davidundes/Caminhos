@@ -9,8 +9,59 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 class HomeActivity: AppCompatActivity() {
+
+    private fun adicionarPonto(mapa: MapView, latitude: Double, longitude: Double){
+        val marcador = Marker(mapa).apply {
+            position = GeoPoint(latitude, longitude)
+            setAnchor(
+                Marker.ANCHOR_CENTER,
+                Marker.ANCHOR_BOTTOM
+            )
+
+            title = "IFSP JCR"
+            snippet = "IFSP CAMPUS DE JACAREI"
+
+            subDescription = "Rua Antonio fogaça de almeida, 200 - jardim america"
+
+            setPanToView(false)
+
+            setOnMarkerClickListener { ponto, mapView ->
+                if (ponto.isInfoWindowShown) {
+                ponto.closeInfoWindow()
+                }else {
+                    ponto.showInfoWindow()
+                }
+                true
+            }
+        }
+        mapa.overlays.add(marcador)
+        mapa.invalidate()
+
+        mapa.addMapListener(object: MapListener{
+            override fun onScroll(event: ScrollEvent?): Boolean {
+                atualizarVisibilidadePOI(mapa, marcador)
+                return true
+            }
+            override fun onZoom(event: ZoomEvent?): Boolean {
+                atualizarVisibilidadePOI(mapa, marcador)
+                return true
+            }
+        })
+        atualizarVisibilidadePOI(mapa, marcador)
+    }
+
+    private fun atualizarVisibilidadePOI(
+        mapa: MapView,
+        marcador: Marker
+    ) {
+        marcador.isEnabled = mapa.zoomLevel >= 17.0
+        mapa.invalidate()
+    }
 
     private lateinit var map: MapView
     @SuppressLint("MissingInflatedId")
@@ -41,6 +92,8 @@ class HomeActivity: AppCompatActivity() {
 
         map = findViewById(R.id.map)
         map.setMultiTouchControls(true)
+
+        adicionarPonto(map ,-23.3172, -45.9841)
 
     }
 
