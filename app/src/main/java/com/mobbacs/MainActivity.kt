@@ -14,5 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        finish()
     }
+
 }

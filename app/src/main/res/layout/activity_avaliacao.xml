@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Avalie a acessibilidade do local"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nota geral"
+            android:textSize="16sp" />
+
+        <RatingBar
+            android:id="@+id/ratingNota"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Itens de acessibilidade"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/checkRampa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rampa de acesso" />
+
+        <CheckBox
+            android:id="@+id/checkElevador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Elevador" />
+
+        <CheckBox
+            android:id="@+id/checkBanheiro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Banheiro acessível" />
+
+        <CheckBox
+            android:id="@+id/checkPisoTatil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Piso tátil" />
+
+        <CheckBox
+            android:id="@+id/checkVagaPcd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vaga PCD" />
+
+        <CheckBox
+            android:id="@+id/checkEntrada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Entrada acessível" />
+
+        <CheckBox
+            android:id="@+id/checkCorrimao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Corrimão" />
+
+        <CheckBox
+            android:id="@+id/checkPortas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Portas largas" />
+
+        <CheckBox
+            android:id="@+id/checkSinalizacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sinalização acessível" />
+
+        <CheckBox
+            android:id="@+id/checkIluminacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Iluminação adequada" />
+
+        <Button
+            android:id="@+id/buttonEnviarAvaliacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Enviar avaliação" />
+
+    </LinearLayout>
+</ScrollView>

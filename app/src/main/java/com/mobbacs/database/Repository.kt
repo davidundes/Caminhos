@@ -35,7 +35,7 @@ object Repository {
                 .from("tb_acessibilidade")
                 .update(acessibilidade) {
                     filter {
-                        eq("id_acessibilidade", acessibilidade.id_acessibilidade)
+                        eq("id_acessibilidade", acessibilidade.id_acessibilidade as Any)
                     }
                 }
         }
@@ -53,10 +53,15 @@ object Repository {
     }
 
     class AvaliacaoRepository {
-        suspend fun createAvaliacao(avaliacao: Avaliacao) {
-            client
+        // Insere a avaliação e devolve o registro já com o id_avaliacao
+        // gerado pelo banco, necessário para vincular a Acessibilidade.
+        suspend fun createAvaliacao(avaliacao: Avaliacao): Avaliacao {
+            return client
                 .from("tb_avaliacao")
-                .insert(avaliacao)
+                .insert(avaliacao) {
+                    select()
+                }
+                .decodeSingle<Avaliacao>()
         }
 
         suspend fun getAvaliacao(id: Int): Avaliacao? {
@@ -75,7 +80,7 @@ object Repository {
                 .from("tb_avaliacao")
                 .update(avaliacao) {
                     filter {
-                        eq("id_avaliacao", avaliacao.id_avaliacao)
+                        eq("id_avaliacao", avaliacao.id_avaliacao as Any)
                     }
                 }
         }

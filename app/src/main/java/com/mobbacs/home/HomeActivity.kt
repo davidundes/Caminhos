@@ -24,6 +24,7 @@ class HomeActivity: AppCompatActivity() {
 
     private fun adicionarPonto(
         mapa: MapView,
+        idLocal: Int,
         latitude: Double,
         longitude: Double,
         titulo: String,
@@ -40,6 +41,12 @@ class HomeActivity: AppCompatActivity() {
             title = titulo
             snippet = subtitulo
             subDescription = descricao
+
+            // guarda o id do local no marcador para recuperar
+            // na hora de abrir a tela de avaliação
+            relatedObject = idLocal
+
+            infoWindow = localInfoWindow(mapa)
 
             setPanToView(false)
 
@@ -89,6 +96,7 @@ class HomeActivity: AppCompatActivity() {
                     )
                     adicionarPonto(
                         map,
+                        local.id_local,
                         local.latitude,
                         local.longitude,
                         local.nome,
