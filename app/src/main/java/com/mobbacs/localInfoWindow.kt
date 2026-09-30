@@ -9,7 +9,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 
-class localInfoWindow(mapView: MapView) : InfoWindow(R.layout.localinfowindow, mapView) {
+class localInfoWindow(mapView: MapView) : InfoWindow(R.layout.localcreate, mapView) {
 
     override fun onOpen(item: Any?) {
         val marker = item as? Marker ?: return

@@ -76,8 +76,7 @@ class AvaliacaoActivity : AppCompatActivity() {
                         data = dataAtual
                     )
 
-                    // Insere a avaliação e recupera o id_avaliacao gerado
-                    // pelo banco, necessário para vincular a Acessibilidade.
+
                     val avaliacaoCriada = avaliacaoRepository.createAvaliacao(avaliacao)
                     val idAvaliacao = requireNotNull(avaliacaoCriada.id_avaliacao) {
                         "id_avaliacao não retornado pelo banco"

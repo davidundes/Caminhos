@@ -31,11 +31,15 @@ object Repository {
         }
 
         suspend fun updateAcessibilidade(acessibilidade: Acessibilidade) {
+            val idAcessibilidade = requireNotNull(acessibilidade.id_acessibilidade) {
+                "O id_acessibilidade não pode ser nulo"
+            }
+
             client
                 .from("tb_acessibilidade")
                 .update(acessibilidade) {
                     filter {
-                        eq("id_acessibilidade", acessibilidade.id_acessibilidade as Any)
+                        eq("id_acessibilidade", idAcessibilidade)
                     }
                 }
         }
@@ -76,11 +80,15 @@ object Repository {
         }
 
         suspend fun updateAvaliacao(avaliacao: Avaliacao) {
+            val idAvaliacao = requireNotNull(avaliacao.id_avaliacao) {
+                "O id_avaliacao não pode ser nulo"
+            }
+
             client
                 .from("tb_avaliacao")
                 .update(avaliacao) {
                     filter {
-                        eq("id_avaliacao", avaliacao.id_avaliacao as Any)
+                        eq("id_avaliacao", idAvaliacao)
                     }
                 }
         }
@@ -161,11 +169,15 @@ object Repository {
         }
 
         suspend fun updateLocal(local: Local) {
+            val idLocal = requireNotNull(local.id_local) {
+                "O id_local não pode ser nulo"
+            }
+
             client
                 .from("tb_local")
                 .update(local) {
                     filter {
-                        eq("id_local", local.id_local)
+                        eq("id_local", idLocal)
                     }
                 }
         }
