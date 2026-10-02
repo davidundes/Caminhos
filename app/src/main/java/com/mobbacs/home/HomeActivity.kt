@@ -21,6 +21,10 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import com.mobbacs.database.SupabaseClient
+import com.mobbacs.login.LoginActivity
+import io.github.jan.supabase.auth.auth
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -40,6 +44,13 @@ class HomeActivity : AppCompatActivity() {
             applicationContext,
             getSharedPreferences("osmdroid", MODE_PRIVATE)
         )
+        val session = SupabaseClient.client.auth.currentSessionOrNull()
+        println(session)
+        if (session == null){
+            val intent = Intent(this, LoginActivity()::class.java)
+            startActivity(intent)
+        }
+
         Configuration.getInstance().userAgentValue = packageName
 
         setContentView(R.layout.home)

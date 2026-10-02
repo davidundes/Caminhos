@@ -54,9 +54,7 @@ class LoginActivity: AppCompatActivity() {
                         this@LoginActivity ,"Login efetuado com sucesso!",
                         Toast.LENGTH_LONG
                     ).show()
-                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-
-                    startActivity(intent)
+                    finish()
                 } catch (e: Exception){
                     Toast.makeText(
                         this@LoginActivity,

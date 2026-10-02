@@ -5,11 +5,12 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import com.mobbacs.home.HomeActivity
 
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val intent = Intent(this, LoginActivity()::class.java)
+        val intent = Intent(this, HomeActivity()::class.java)
         startActivity(intent)
 
         super.onCreate(savedInstanceState)
