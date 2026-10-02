@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Acessibilidade(
     val id_acessibilidade: Int? = null,
-    val id_avaliaco: Int,
+    val id_avaliacao: Int,
     val rampa: Boolean,
     val elevador: Boolean,
     val banheiro_acessivel: Boolean,

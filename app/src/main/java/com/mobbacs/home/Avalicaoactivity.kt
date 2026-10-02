@@ -1,6 +1,7 @@
 package com.mobbacs.avaliacao
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.RatingBar
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.log
 
 class AvaliacaoActivity : AppCompatActivity() {
 
@@ -81,9 +83,9 @@ class AvaliacaoActivity : AppCompatActivity() {
                     val idAvaliacao = requireNotNull(avaliacaoCriada.id_avaliacao) {
                         "id_avaliacao não retornado pelo banco"
                     }
-
+                    print(idAvaliacao)
                     val acessibilidade = Acessibilidade(
-                        id_avaliaco = idAvaliacao,
+                        id_avaliacao = idAvaliacao,
                         rampa = checkRampa.isChecked,
                         elevador = checkElevador.isChecked,
                         banheiro_acessivel = checkBanheiro.isChecked,
@@ -111,6 +113,7 @@ class AvaliacaoActivity : AppCompatActivity() {
                         "Erro ao enviar avaliação!",
                         Toast.LENGTH_LONG
                     ).show()
+                    Log.e("Erro ao avaliar ", "${e.message}")
                 }
             }
         }
