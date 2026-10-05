@@ -130,8 +130,7 @@ Relacionamentos: cada avaliação pertence a um usuário e a um local, e cada re
 ## Contribuidores
 
 Veja todos os contribuidores deste projeto:
+
 [Felipe Villalva](https://github.com/felipe-villalva)
-
 [Davi Dundes](https://github.com/davidundes)
-
 [Lucas Soares](https://github.com/lucasdacostasoaresti-info)
