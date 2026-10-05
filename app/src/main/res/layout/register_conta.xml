@@ -5,109 +5,172 @@
     android:id="@+id/buttonlinklogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
-
-    <EditText
-        android:id="@+id/editNome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nome"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/editEmail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.958" />
-
-    <EditText
-        android:id="@+id/editEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/editSenha"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/editSenha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:ems="10"
-        android:hint="Senha"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/editCPF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/editCPF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
-        android:ems="10"
-        android:hint="CPF"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/buttonRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="172dp"
-        android:backgroundTint="#3F51B5"
-        android:text="Registro"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="212dp"
-        android:layout_height="3dp"
-        android:background="@color/black"
-        android:backgroundTint="#120E0E"
-        app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editCPF"
-        app:layout_constraintVertical_bias="0.448" />
+    android:background="#F5F8FC"
+    android:paddingStart="28dp"
+    android:paddingEnd="28dp">
 
     <ImageView
         android:id="@+id/imageLogo1"
-        android:layout_width="190dp"
-        android:layout_height="204dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editNome"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="32dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo do aplicativo"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.702"
         app:srcCompat="@drawable/logo" />
 
+    <TextView
+        android:id="@+id/textTituloRegistro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Crie sua conta"
+        android:textColor="#1B2A41"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageLogo1" />
+
+    <TextView
+        android:id="@+id/textSubtituloRegistro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="Preencha os dados para se registrar"
+        android:textColor="#6B7A90"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTituloRegistro" />
+
+    <EditText
+        android:id="@+id/editNome"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_input"
+        android:hint="Nome"
+        android:inputType="text"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="#1B2A41"
+        android:textColorHint="#9AA7B8"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSubtituloRegistro" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_input"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="#1B2A41"
+        android:textColorHint="#9AA7B8"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editNome" />
+
+    <EditText
+        android:id="@+id/editSenha"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_input"
+        android:hint="Senha"
+        android:inputType="textPassword"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="#1B2A41"
+        android:textColorHint="#9AA7B8"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editEmail" />
+
+    <EditText
+        android:id="@+id/editCPF"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_input"
+        android:hint="CPF"
+        android:inputType="number"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="#1B2A41"
+        android:textColorHint="#9AA7B8"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editSenha" />
+
     <Button
-        android:id="@+id/buttonLinkLogin"
-        android:layout_width="98dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="157dp"
-        android:layout_marginBottom="115dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/buttonRegister"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_button_primary"
+        android:stateListAnimator="@null"
+        android:text="Registro"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editCPF" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="#D5DDE8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />
+
+    <TextView
+        android:id="@+id/textJaTemConta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Já tem uma conta?"
+        android:textColor="#6B7A90"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <Button
+        android:id="@+id/buttonLinkLogin"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_button_outline"
+        android:stateListAnimator="@null"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:textColor="#21BBFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textJaTemConta" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

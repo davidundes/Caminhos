@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F5F8FC">
 
     <org.osmdroid.views.MapView
         android:id="@+id/map"
@@ -15,26 +16,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <TextView
+        android:id="@+id/textInstrucaoMapa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/bg_input"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:paddingStart="18dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="14dp"
+        android:text="Mova o mapa para escolher o local"
+        android:textColor="#1B2A41"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/centerIndicador"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_location_pin"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:contentDescription="@string/ponto_selecionado"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_location_pin"
+        android:translationY="-22dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnConfirmar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bg_button_primary"
+        android:elevation="6dp"
+        android:stateListAnimator="@null"
         android:text="Confirmar local"
-        android:textSize="40sp"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

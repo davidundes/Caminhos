@@ -15,7 +15,7 @@ import com.caminhos.register.RegisterActivity
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
-
+import com.caminhos.home.HomeActivity
 
 class LoginActivity: AppCompatActivity() {
 
@@ -47,14 +47,15 @@ class LoginActivity: AppCompatActivity() {
             val senhaUsuario = senha.text.toString()
 
             lifecycleScope.launch() {
-                try{
+                try {
                     login(emailUsuario, senhaUsuario)
                     Toast.makeText(
-                        this@LoginActivity ,"Login efetuado com sucesso!",
+                        this@LoginActivity, "Login efetuado com sucesso!",
                         Toast.LENGTH_LONG
                     ).show()
+                    startActivity(Intent(this@LoginActivity, HomeActivity()::class.java))
                     finish()
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     Toast.makeText(
                         this@LoginActivity,
                         "Senha ou/e Email inválidos!",

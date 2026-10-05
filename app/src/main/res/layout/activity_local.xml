@@ -1,113 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/btnRegisterLocal"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F5F8FC"
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/textBoxNomeLocal"
-        android:layout_width="265dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="92dp"
-        android:text="Nome Do Local"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextNomeEndereco"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/btnRegisterLocal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/textBoxNomeLocal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:paddingStart="28dp"
+        android:paddingTop="48dp"
+        android:paddingEnd="28dp"
+        android:paddingBottom="32dp">
 
-    <TextView
-        android:id="@+id/textBoxEndereco"
-        android:layout_width="265dp"
-        android:layout_height="61dp"
-        android:text="Endereço"
-        app:layout_constraintTop_toBottomOf="@id/editTextNomeEndereco"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textTituloLocal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Cadastrar local"
+            android:textColor="#1B2A41"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextEndereco"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/textBoxEndereco"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textSubtituloLocal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="Informe os dados do local"
+            android:textColor="#6B7A90"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTituloLocal" />
 
-    <TextView
-        android:id="@+id/textBoxtCep"
-        android:layout_width="265dp"
-        android:layout_height="61dp"
-        android:text="Cep"
-        app:layout_constraintTop_toBottomOf="@id/editTextEndereco"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textBoxNomeLocal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="4dp"
+            android:text="Nome Do Local"
+            android:textColor="#1B2A41"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textSubtituloLocal" />
 
-    <EditText
-        android:id="@+id/editTextCep"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        app:layout_constraintTop_toBottomOf="@id/textBoxtCep"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <EditText
+            android:id="@+id/editTextNomeEndereco"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input"
+            android:hint="Ex.: Shopping Center"
+            android:inputType="text"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#1B2A41"
+            android:textColorHint="#9AA7B8"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textBoxNomeLocal" />
 
-    <TextView
-        android:id="@+id/textBoxTelefone"
-        android:layout_width="265dp"
-        android:layout_height="61dp"
-        android:text="Telefone"
-        app:layout_constraintTop_toBottomOf="@id/editTextCep"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textBoxEndereco"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="4dp"
+            android:text="Endereço"
+            android:textColor="#1B2A41"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextNomeEndereco" />
 
-    <EditText
-        android:id="@+id/editTextTelefone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="phone"
-        app:layout_constraintTop_toBottomOf="@id/textBoxTelefone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <EditText
+            android:id="@+id/editTextEndereco"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input"
+            android:hint="Rua, número e bairro"
+            android:inputType="text"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#1B2A41"
+            android:textColorHint="#9AA7B8"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textBoxEndereco" />
 
-    <TextView
-        android:id="@+id/textBoxHorario"
-        android:layout_width="265dp"
-        android:layout_height="61dp"
-        android:text="Horario"
-        app:layout_constraintTop_toBottomOf="@id/editTextTelefone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textBoxtCep"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="4dp"
+            android:text="Cep"
+            android:textColor="#1B2A41"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextEndereco" />
 
-    <EditText
-        android:id="@+id/editTextHorario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/textBoxHorario"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <EditText
+            android:id="@+id/editTextCep"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input"
+            android:hint="00000-000"
+            android:inputType="number"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#1B2A41"
+            android:textColorHint="#9AA7B8"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textBoxtCep" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registre"
-        app:layout_constraintTop_toBottomOf="@id/editTextHorario"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textBoxTelefone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="4dp"
+            android:text="Telefone"
+            android:textColor="#1B2A41"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextCep" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/editTextTelefone"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input"
+            android:hint="(00) 00000-0000"
+            android:inputType="phone"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#1B2A41"
+            android:textColorHint="#9AA7B8"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textBoxTelefone" />
+
+        <TextView
+            android:id="@+id/textBoxHorario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="4dp"
+            android:text="Horario"
+            android:textColor="#1B2A41"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextTelefone" />
+
+        <EditText
+            android:id="@+id/editTextHorario"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input"
+            android:hint="Ex.: Seg a Sex, 8h às 18h"
+            android:inputType="text"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#1B2A41"
+            android:textColorHint="#9AA7B8"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textBoxHorario" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null"
+            android:text="Registre"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextHorario" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

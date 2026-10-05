@@ -24,6 +24,7 @@ import org.osmdroid.views.overlay.Marker
 import com.caminhos.database.SupabaseClient
 import com.caminhos.login.LoginActivity
 import io.github.jan.supabase.auth.auth
+import java.util.Locale
 
 
 class HomeActivity : AppCompatActivity() {
@@ -48,6 +49,7 @@ class HomeActivity : AppCompatActivity() {
         println(session)
         if (session == null) {
             val intent = Intent(this, LoginActivity()::class.java)
+            finish()
             startActivity(intent)
         }
 
@@ -164,7 +166,7 @@ class HomeActivity : AppCompatActivity() {
                     lifecycleScope.launch {
                         try {
                             val texto = montarTextoAvaliacoes(idLocal)
-                            ponto.subDescription = "$descricao\n$texto"
+                            ponto.subDescription = "🕒 $descricao\n\n$texto"
                         } catch (e: Exception) {
                             Log.e("HomeActivity", "Erro ao buscar avaliações", e)
                         }
@@ -188,7 +190,7 @@ class HomeActivity : AppCompatActivity() {
 
     private suspend fun montarTextoAvaliacoes(idLocal: Int): String {
         val avaliacoes = acessibilidadeRepository.getAvaliacoesByLocal(idLocal)
-        if (avaliacoes.isEmpty()) return "Sem avaliações ainda"
+        if (avaliacoes.isEmpty()) return "☆ Sem avaliações ainda"
 
         val media = avaliacoes.map { it.nota }.average()
         val ids = avaliacoes.mapNotNull { it.id_avaliacao }
@@ -206,15 +208,21 @@ class HomeActivity : AppCompatActivity() {
             "Sinalização" to acessibilidades.count { it.sinalizacao == true },
             "Iluminação" to acessibilidades.count { it.iluminacao == true }
         ).filter { it.second > 0 }
+            .sortedByDescending { it.second }
+
+        val total = avaliacoes.size
+        val palavraAvaliacao = if (total == 1) "avaliação" else "avaliações"
 
         return buildString {
-            append("★ %.1f (%d avaliações)".format(media, avaliacoes.size))
+            append("★ %.1f · %d %s".format(Locale("pt", "BR"), media, total, palavraAvaliacao))
             if (itens.isNotEmpty()) {
-                append("\n\nAcessibilidade:")
+                append("\n\nAcessibilidade")
                 itens.forEach { (nome, qtd) ->
-                    append("\n $nome — $qtd ${if (qtd == 1) "usuário" else "usuários"}")
+                    val palavraUsuario = if (qtd == 1) "usuário" else "usuários"
+                    append("\n✔ $nome · $qtd $palavraUsuario")
                 }
             }
         }
     }
+
 }
