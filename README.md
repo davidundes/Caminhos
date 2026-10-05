@@ -1,4 +1,4 @@
-# Caminhos
+## Caminhos
 
 Aplicativo Android para **mapear e avaliar a acessibilidade de locais** em Jacareí (SP). Os usuários visualizam locais em um mapa, cadastram novos pontos e avaliam o quão acessível cada um é, com nota por estrelas e uma lista de itens de acessibilidade.
 
@@ -34,8 +34,9 @@ Aplicativo Android para **mapear e avaliar a acessibilidade de locais** em Jacar
 ## Estrutura do projeto
 
 ```
-com.mobbacs
+com.caminhos
 ├── MainActivity.kt            # Ponto de entrada; redireciona para a Home
+├── localInfoWindow.kt         # Balão do marcador com botão "Avaliar"
 ├── database/
 │   ├── SupaDB.kt              # SupabaseClient (Auth + Postgrest)
 │   └── Repository.kt          # Repositórios de acesso às tabelas
@@ -47,11 +48,9 @@ com.mobbacs
 │   └── Image.kt
 ├── home/
 │   ├── HomeActivity.kt        # Mapa, marcadores e resumo de avaliações
-│   └── localInfoWindow.kt     # Balão do marcador com botão "Avaliar"
+│   └── Avaliacaoactivity.kt   # Tela de avaliação (AvaliacaoActivity)
 ├── local/
 │   └── LocalActivity.kt       # Cadastro de novos locais
-├── avaliacao/
-│   └── AvaliacaoActivity.kt   # Tela de avaliação
 ├── login/
 │   └── LoginActivity.kt
 └── register/
