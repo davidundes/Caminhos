@@ -1,4 +1,4 @@
-# MobBacs
+# Caminhos
 
 Aplicativo Android para **mapear e avaliar a acessibilidade de locais** em Jacareí (SP). Os usuários visualizam locais em um mapa, cadastram novos pontos e avaliam o quão acessível cada um é, com nota por estrelas e uma lista de itens de acessibilidade.
 
@@ -131,5 +131,7 @@ Relacionamentos: cada avaliação pertence a um usuário e a um local, e cada re
 
 Veja todos os contribuidores deste projeto:
 [Felipe Villalva](https://github.com/felipe-villalva)
+
 [Davi Dundes](https://github.com/davidundes)
-[Lucas Soares]((https://github.com/lucasdacostasoaresti-info))
+
+[Lucas Soares](https://github.com/lucasdacostasoaresti-info)
