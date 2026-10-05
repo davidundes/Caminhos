@@ -18,6 +18,27 @@ object Repository {
                 .from("tb_acessibilidade")
                 .insert(acessibilidade)
         }
+        suspend fun getAcessibilidadesByAvaliacoes(ids: List<Int>): List<Acessibilidade> {
+            if (ids.isEmpty()) return emptyList()
+
+            return client
+                .from("tb_acessibilidade")
+                .select {
+                    filter {
+                        isIn("id_avaliacao", ids)
+                    }
+                }
+                .decodeList<Acessibilidade>()
+        }
+
+        suspend fun getAvaliacoesByLocal(idLocal: Int): List<Avaliacao> {
+            return client
+                .from("tb_avaliacao")
+                .select {
+                    filter { eq("id_local", idLocal) }
+                }
+                .decodeList<Avaliacao>()
+        }
 
         suspend fun getAcessibilidade(id: Int): Acessibilidade? {
             return client

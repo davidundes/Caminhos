@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.mobbacs.R
@@ -23,11 +25,14 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import com.mobbacs.database.SupabaseClient
 import com.mobbacs.login.LoginActivity
+import com.mobbacs.models.Avaliacao
 import io.github.jan.supabase.auth.auth
 
 
 class HomeActivity : AppCompatActivity() {
 
+    private val avaliacaoRepository = Repository.AvaliacaoRepository()
+    private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
     private val localRepository = Repository.LocalRepository()
     private lateinit var map: MapView
 
@@ -46,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
         )
         val session = SupabaseClient.client.auth.currentSessionOrNull()
         println(session)
-        if (session == null){
+        if (session == null) {
             val intent = Intent(this, LoginActivity()::class.java)
             startActivity(intent)
         }
@@ -104,7 +109,10 @@ class HomeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val locais: List<Local> = localRepository.getAllLocais()
-                Log.d("HomeActivity", "carregarLocaisDoBanco: ${locais.size} local(is) retornado(s)")
+                Log.d(
+                    "HomeActivity",
+                    "carregarLocaisDoBanco: ${locais.size} local(is) retornado(s)"
+                )
 
                 // Limpa os marcadores antigos para não duplicar
                 map.overlays.removeAll { it is Marker }
@@ -140,7 +148,7 @@ class HomeActivity : AppCompatActivity() {
         longitude: Double,
         titulo: String,
         subtitulo: String,
-        descricao: String
+        descricao: String,
     ) {
         val marcador = Marker(mapa).apply {
             position = GeoPoint(latitude, longitude)
@@ -159,7 +167,15 @@ class HomeActivity : AppCompatActivity() {
                 if (ponto.isInfoWindowShown) {
                     ponto.closeInfoWindow()
                 } else {
-                    ponto.showInfoWindow()
+                    lifecycleScope.launch {
+                        try {
+                            val texto = montarTextoAvaliacoes(idLocal)
+                            ponto.subDescription = "$descricao\n$texto"
+                        } catch (e: Exception) {
+                            Log.e("HomeActivity", "Erro ao buscar avaliações", e)
+                        }
+                        ponto.showInfoWindow()
+                    }
                 }
                 true
             }
@@ -174,5 +190,38 @@ class HomeActivity : AppCompatActivity() {
         val visivel = map.zoomLevelDouble >= ZOOM_MINIMO_POI
         map.overlays.filterIsInstance<Marker>().forEach { it.isEnabled = visivel }
         map.invalidate()
+    }
+
+    private suspend fun montarTextoAvaliacoes(idLocal: Int): String {
+        val avaliacoes = acessibilidadeRepository.getAvaliacoesByLocal(idLocal)
+        if (avaliacoes.isEmpty()) return "Sem avaliações ainda"
+
+        val media = avaliacoes.map { it.nota }.average()
+        val ids = avaliacoes.mapNotNull { it.id_avaliacao }
+        val acessibilidades = acessibilidadeRepository.getAcessibilidadesByAvaliacoes(ids)
+
+        // só entram os itens que pelo menos 1 usuário marcou como true
+        val itens = listOf(
+            "Rampa" to acessibilidades.count { it.rampa == true },
+            "Elevador" to acessibilidades.count { it.elevador == true },
+            "Banheiro acessível" to acessibilidades.count { it.banheiro_acessivel == true },
+            "Piso tátil" to acessibilidades.count { it.piso_tatil == true },
+            "Vaga PCD" to acessibilidades.count { it.vaga_pcd == true },
+            "Entrada acessível" to acessibilidades.count { it.entrada_acessivel == true },
+            "Corrimão" to acessibilidades.count { it.corrimao == true },
+            "Portas largas" to acessibilidades.count { it.portas_largas == true },
+            "Sinalização" to acessibilidades.count { it.sinalizacao == true },
+            "Iluminação" to acessibilidades.count { it.iluminacao == true }
+        ).filter { it.second > 0 }
+
+        return buildString {
+            append("★ %.1f (%d avaliações)".format(media, avaliacoes.size))
+            if (itens.isNotEmpty()) {
+                append("\n\nAcessibilidade:")
+                itens.forEach { (nome, qtd) ->
+                    append("\n $nome — $qtd ${if (qtd == 1) "usuário" else "usuários"}")
+                }
+            }
+        }
     }
 }
