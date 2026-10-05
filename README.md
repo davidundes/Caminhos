@@ -130,6 +130,6 @@ Relacionamentos: cada avaliação pertence a um usuário e a um local, e cada re
 ## Contribuidores
 
 Veja todos os contribuidores deste projeto:
-
-[Ver contribuidores](https://github.com/davidundes/Caminhos/graphs/contributors?from=04%2F07%2F2026)
-
+[Felipe Villalva](https://github.com/felipe-villalva)
+[Davi Dundes](https://github.com/davidundes)
+[Lucas Soares]((https://github.com/lucasdacostasoaresti-info))
