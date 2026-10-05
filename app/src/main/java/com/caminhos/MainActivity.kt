@@ -1,11 +1,10 @@
-package com.mobbacs
+package com.caminhos
 
-import com.mobbacs.login.LoginActivity
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import com.mobbacs.home.HomeActivity
+import com.caminhos.home.HomeActivity
 
 
 class MainActivity : AppCompatActivity() {

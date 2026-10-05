@@ -1,19 +1,17 @@
-package com.mobbacs.home
+package com.caminhos.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.mobbacs.R
-import com.mobbacs.database.Repository
-import com.mobbacs.local.LocalActivity
-import com.mobbacs.models.Local
+import com.caminhos.R
+import com.caminhos.database.Repository
+import com.caminhos.local.LocalActivity
+import com.caminhos.models.Local
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapListener
@@ -23,15 +21,12 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import com.mobbacs.database.SupabaseClient
-import com.mobbacs.login.LoginActivity
-import com.mobbacs.models.Avaliacao
+import com.caminhos.database.SupabaseClient
+import com.caminhos.login.LoginActivity
 import io.github.jan.supabase.auth.auth
 
 
 class HomeActivity : AppCompatActivity() {
-
-    private val avaliacaoRepository = Repository.AvaliacaoRepository()
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
     private val localRepository = Repository.LocalRepository()
     private lateinit var map: MapView
@@ -114,7 +109,6 @@ class HomeActivity : AppCompatActivity() {
                     "carregarLocaisDoBanco: ${locais.size} local(is) retornado(s)"
                 )
 
-                // Limpa os marcadores antigos para não duplicar
                 map.overlays.removeAll { it is Marker }
 
                 locais.forEach { local ->
@@ -200,7 +194,6 @@ class HomeActivity : AppCompatActivity() {
         val ids = avaliacoes.mapNotNull { it.id_avaliacao }
         val acessibilidades = acessibilidadeRepository.getAcessibilidadesByAvaliacoes(ids)
 
-        // só entram os itens que pelo menos 1 usuário marcou como true
         val itens = listOf(
             "Rampa" to acessibilidades.count { it.rampa == true },
             "Elevador" to acessibilidades.count { it.elevador == true },

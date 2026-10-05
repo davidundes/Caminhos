@@ -1,4 +1,4 @@
-package com.mobbacs.models
+package com.caminhos.models
 
 import kotlinx.serialization.Serializable
 

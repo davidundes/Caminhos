@@ -1,10 +1,10 @@
-package com.mobbacs.home
+package com.caminhos.home
 
 import android.content.Intent
 import android.widget.Button
 import android.widget.TextView
-import com.mobbacs.R
-import com.mobbacs.avaliacao.AvaliacaoActivity
+import com.caminhos.R
+import com.caminhos.avaliacao.AvaliacaoActivity
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.infowindow.InfoWindow

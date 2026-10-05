@@ -1,4 +1,4 @@
-package com.mobbacs.avaliacao
+package com.caminhos.avaliacao
 
 import android.os.Bundle
 import android.util.Log
@@ -9,17 +9,16 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.mobbacs.R
-import com.mobbacs.database.Repository
-import com.mobbacs.database.SupabaseClient
-import com.mobbacs.models.Acessibilidade
-import com.mobbacs.models.Avaliacao
+import com.caminhos.R
+import com.caminhos.database.Repository
+import com.caminhos.database.SupabaseClient
+import com.caminhos.models.Acessibilidade
+import com.caminhos.models.Avaliacao
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.log
 
 class AvaliacaoActivity : AppCompatActivity() {
 

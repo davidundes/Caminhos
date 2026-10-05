@@ -12,11 +12,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mobbacs"
+    namespace = "com.caminhos"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.mobbacs"
+        applicationId = "com.caminhos"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

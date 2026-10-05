@@ -28,11 +28,11 @@
         </activity>
 
         <activity
-            android:name="com.mobbacs.register.RegisterActivity"
+            android:name="com.caminhos.register.RegisterActivity"
             android:exported="false" />
-        <activity android:name="com.mobbacs.login.LoginActivity"
+        <activity android:name="com.caminhos.login.LoginActivity"
             android:exported="false" />
-        <activity android:name="com.mobbacs.home.HomeActivity"
+        <activity android:name="com.caminhos.home.HomeActivity"
             android:exported="false"/>
         <activity android:name=".avaliacao.AvaliacaoActivity" />
         <activity android:name=".local.LocalActivity"/>

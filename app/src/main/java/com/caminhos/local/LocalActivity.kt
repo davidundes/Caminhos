@@ -1,17 +1,16 @@
-package com.mobbacs.local
+package com.caminhos.local
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.mobbacs.R
-import com.mobbacs.database.Repository
-import com.mobbacs.models.Local
+import com.caminhos.R
+import com.caminhos.database.Repository
+import com.caminhos.models.Local
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint

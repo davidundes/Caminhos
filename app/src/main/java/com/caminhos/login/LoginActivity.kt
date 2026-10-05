@@ -1,4 +1,4 @@
-package com.mobbacs.login
+package com.caminhos.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,10 +9,9 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.mobbacs.R
-import com.mobbacs.database.SupabaseClient
-import com.mobbacs.home.HomeActivity
-import com.mobbacs.register.RegisterActivity
+import com.caminhos.R
+import com.caminhos.database.SupabaseClient
+import com.caminhos.register.RegisterActivity
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email

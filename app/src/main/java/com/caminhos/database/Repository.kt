@@ -1,12 +1,12 @@
-package com.mobbacs.database
+package com.caminhos.database
 
-import com.mobbacs.database.SupabaseClient.client
+import com.caminhos.database.SupabaseClient.client
 
-import com.mobbacs.models.Acessibilidade
-import com.mobbacs.models.Avaliacao
-import com.mobbacs.models.Image
-import com.mobbacs.models.Local
-import com.mobbacs.models.User
+import com.caminhos.models.Acessibilidade
+import com.caminhos.models.Avaliacao
+import com.caminhos.models.Image
+import com.caminhos.models.Local
+import com.caminhos.models.User
 
 import io.github.jan.supabase.postgrest.from
 

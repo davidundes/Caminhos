@@ -1,6 +1,6 @@
-package com.mobbacs.database
+package com.caminhos.database
 
-import com.mobbacs.BuildConfig
+import com.caminhos.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 

@@ -1,6 +1,5 @@
-package com.mobbacs.register
+package com.caminhos.register
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -9,12 +8,11 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.mobbacs.R
-import com.mobbacs.models.User
-import com.mobbacs.database.SupabaseClient
+import com.caminhos.R
+import com.caminhos.models.User
+import com.caminhos.database.SupabaseClient
 import io.github.jan.supabase.auth.auth
-import com.mobbacs.database.Repository
-import com.mobbacs.login.LoginActivity
+import com.caminhos.database.Repository
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
 
