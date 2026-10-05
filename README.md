@@ -86,7 +86,7 @@ Relacionamentos: cada avaliação pertence a um usuário e a um local, e cada re
 1. Clone o repositório:
    ```bash
    git clone <url-do-repositorio>
-   cd mobbacs
+   cd Caminhos
    ```
 2. Adicione as credenciais do Supabase em `local.properties` (não versionar este arquivo):
    ```properties
