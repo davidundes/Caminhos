@@ -25,6 +25,9 @@ import com.caminhos.database.SupabaseClient
 import com.caminhos.login.LoginActivity
 import io.github.jan.supabase.auth.auth
 import java.util.Locale
+import androidx.core.content.ContextCompat
+import android.graphics.Color
+
 
 
 class HomeActivity : AppCompatActivity() {
@@ -101,6 +104,13 @@ class HomeActivity : AppCompatActivity() {
         super.onPause()
     }
 
+    private fun corPorMedia(media: Double?): Int = when {
+        media == null -> Color.parseColor("#9AA7B8") // sem avaliações: cinza
+        media <= 2.0 -> Color.parseColor("#E53935")  // 2 para baixo: vermelho
+        media < 3.5 -> Color.parseColor("#FBC02D")   // entre 2 e 3,5: amarelo
+        else -> Color.parseColor("#43A047")          // 3,5 para cima: verde
+    }
+
     private fun carregarLocaisDoBanco() {
         Log.d("HomeActivity", "carregarLocaisDoBanco: iniciando busca no Supabase")
         lifecycleScope.launch {
@@ -120,6 +130,15 @@ class HomeActivity : AppCompatActivity() {
                         "HomeActivity",
                         "Adicionando marcador '${local.nome}' em (${local.latitude}, ${local.longitude})"
                     )
+                    val media = try {
+                        acessibilidadeRepository.getAvaliacoesByLocal(id)
+                            .map { it.nota }
+                            .average()
+                            .takeIf { !it.isNaN() }
+                    } catch (e: Exception) {
+                        null
+                    }
+
                     adicionarPonto(
                         map,
                         id,
@@ -127,8 +146,10 @@ class HomeActivity : AppCompatActivity() {
                         local.longitude,
                         local.nome,
                         local.endereco,
-                        local.horario
+                        local.horario,
+                        media
                     )
+
                 }
                 map.invalidate()
             } catch (e: Exception) {
@@ -145,10 +166,16 @@ class HomeActivity : AppCompatActivity() {
         titulo: String,
         subtitulo: String,
         descricao: String,
+        media: Double?
     ) {
         val marcador = Marker(mapa).apply {
             position = GeoPoint(latitude, longitude)
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            icon = ContextCompat.getDrawable(this@HomeActivity, R.drawable.ic_marker)
+
+                ?.mutate()
+                ?.apply { setTint(corPorMedia(media)) }
+
 
             title = titulo
             snippet = subtitulo
