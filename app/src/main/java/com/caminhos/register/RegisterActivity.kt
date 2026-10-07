@@ -18,7 +18,6 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 
 
 class RegisterActivity: AppCompatActivity() {
-
     suspend fun cadastrar(email: String, senha: String) {
         SupabaseClient.client.auth.signUpWith(Email) {
             this.email = email
@@ -76,7 +75,6 @@ class RegisterActivity: AppCompatActivity() {
                             Toast.LENGTH_LONG
                         ).show()
                          Log.e("SUPABASE_TESTE", "${e.message}")
-
                     }
                 }
             }

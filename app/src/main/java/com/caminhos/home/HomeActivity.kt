@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
     private val localRepository = Repository.LocalRepository()
     private lateinit var map: MapView
-
     private companion object {
         const val ZOOM_MINIMO_POI = 17.0
     }
@@ -75,7 +74,6 @@ class HomeActivity : AppCompatActivity() {
         map.setMinZoomLevel(13.0)
         map.setMaxZoomLevel(19.0)
 
-
         map.addMapListener(object : MapListener {
             override fun onScroll(event: ScrollEvent?): Boolean {
                 atualizarVisibilidadePOIs()
@@ -87,7 +85,6 @@ class HomeActivity : AppCompatActivity() {
                 return false
             }
         })
-
         bntLocal.setOnClickListener {
             startActivity(Intent(this, LocalActivity::class.java))
         }
@@ -149,7 +146,6 @@ class HomeActivity : AppCompatActivity() {
                         local.horario,
                         media
                     )
-
                 }
                 map.invalidate()
             } catch (e: Exception) {
@@ -175,7 +171,6 @@ class HomeActivity : AppCompatActivity() {
 
                 ?.mutate()
                 ?.apply { setTint(corPorMedia(media)) }
-
 
             title = titulo
             snippet = subtitulo
@@ -203,7 +198,6 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
 
-
             isEnabled = mapa.zoomLevelDouble >= ZOOM_MINIMO_POI
         }
         mapa.overlays.add(marcador)
@@ -218,7 +212,6 @@ class HomeActivity : AppCompatActivity() {
     private suspend fun montarTextoAvaliacoes(idLocal: Int): String {
         val avaliacoes = acessibilidadeRepository.getAvaliacoesByLocal(idLocal)
         if (avaliacoes.isEmpty()) return "☆ Sem avaliações ainda"
-
         val media = avaliacoes.map { it.nota }.average()
         val ids = avaliacoes.mapNotNull { it.id_avaliacao }
         val acessibilidades = acessibilidadeRepository.getAcessibilidadesByAvaliacoes(ids)
@@ -251,5 +244,4 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-
 }

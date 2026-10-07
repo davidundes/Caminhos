@@ -17,7 +17,6 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 
 class LocalActivity : AppCompatActivity() {
-
     private val localRepository = Repository.LocalRepository()
     private lateinit var map: MapView
 

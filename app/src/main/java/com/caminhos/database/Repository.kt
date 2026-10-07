@@ -18,6 +18,7 @@ object Repository {
                 .from("tb_acessibilidade")
                 .insert(acessibilidade)
         }
+
         suspend fun getAcessibilidadesByAvaliacoes(ids: List<Int>): List<Acessibilidade> {
             if (ids.isEmpty()) return emptyList()
 

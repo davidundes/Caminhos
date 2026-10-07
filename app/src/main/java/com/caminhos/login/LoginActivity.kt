@@ -18,14 +18,12 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import com.caminhos.home.HomeActivity
 
 class LoginActivity: AppCompatActivity() {
-
     suspend fun login(email: String, senha: String){
         SupabaseClient.client.auth.signInWith(Email){
             this.email = email
             this.password = senha
         }
     }
-
 
     public override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)

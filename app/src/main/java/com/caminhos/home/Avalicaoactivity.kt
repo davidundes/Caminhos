@@ -38,7 +38,6 @@ class AvaliacaoActivity : AppCompatActivity() {
         }
 
         val ratingNota = findViewById<RatingBar>(R.id.ratingNota)
-
         val checkRampa = findViewById<CheckBox>(R.id.checkRampa)
         val checkElevador = findViewById<CheckBox>(R.id.checkElevador)
         val checkBanheiro = findViewById<CheckBox>(R.id.checkBanheiro)
@@ -49,7 +48,6 @@ class AvaliacaoActivity : AppCompatActivity() {
         val checkPortas = findViewById<CheckBox>(R.id.checkPortas)
         val checkSinalizacao = findViewById<CheckBox>(R.id.checkSinalizacao)
         val checkIluminacao = findViewById<CheckBox>(R.id.checkIluminacao)
-
         val bntEnviar = findViewById<Button>(R.id.buttonEnviarAvaliacao)
 
         bntEnviar.setOnClickListener {
@@ -76,7 +74,6 @@ class AvaliacaoActivity : AppCompatActivity() {
                         nota = nota,
                         data = dataAtual
                     )
-
 
                     val avaliacaoCriada = avaliacaoRepository.createAvaliacao(avaliacao)
                     val idAvaliacao = requireNotNull(avaliacaoCriada.id_avaliacao) {
@@ -105,7 +102,6 @@ class AvaliacaoActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                     finish()
-
                 } catch (e: Exception) {
                     Toast.makeText(
                         this@AvaliacaoActivity,
