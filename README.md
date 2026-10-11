@@ -117,7 +117,6 @@ Relacionamentos: cada avaliação pertence a um usuário e a um local, e cada re
 2. Sem sessão ativa, o usuário é levado à tela de login (com link para o cadastro).
 3. Dando zoom no mapa, os marcadores aparecem; tocar em um deles abre o balão com as avaliações.
 4. Pelo botão **Avaliar** do balão, o usuário logado envia nota e itens de acessibilidade.
-5. Pelo botão de criar local na Home, é possível cadastrar um novo ponto.
 
 ## Roadmap
 
