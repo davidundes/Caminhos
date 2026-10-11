@@ -204,14 +204,17 @@ object Repository {
                 }
         }
 
-        suspend fun deleteLocal(id: Int) {
-            client
-                .from("tb_local")
-                .delete {
+        suspend fun deleteLocal(id: Int): Boolean {
+            return try {
+                client.from("tb_local").delete {
                     filter {
                         eq("id_local", id)
                     }
                 }
+                true
+            } catch (e: Exception) {
+                false
+            }
         }
     }
 
@@ -231,6 +234,19 @@ object Repository {
                     }
                 }
                 .decodeSingleOrNull<User>()
+        }
+
+        suspend fun userIsAdmin(id: String): Boolean {
+            val user = client
+                .from("tb_usuario")
+                .select {
+                    filter {
+                        eq("id_usuario", id)
+                    }
+                }
+                .decodeSingleOrNull<User>()
+
+            return user?.is_admin == true
         }
 
         suspend fun updateUser(user: User) {

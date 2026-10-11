@@ -9,4 +9,5 @@ data class User(
     val id_usuario: String? = null,
     val nome: String,
     val email: String? = null,
+    val is_admin: Boolean? = false,
     val cpf: String? = null)

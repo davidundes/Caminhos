@@ -27,8 +27,9 @@ import io.github.jan.supabase.auth.auth
 import java.util.Locale
 import androidx.core.content.ContextCompat
 import android.graphics.Color
-
-
+import com.caminhos.local.localInfoWindow
+import com.caminhos.database.Repository.UserRepository
+import com.caminhos.usuario.SessaoUsuario
 
 class HomeActivity : AppCompatActivity() {
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
@@ -53,6 +54,15 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity()::class.java)
             finish()
             startActivity(intent)
+        }
+
+        val userRepository = UserRepository()
+        val idUsuarioLogado = SupabaseClient.client.auth.currentUserOrNull()?.id
+
+        if (idUsuarioLogado != null) {
+            lifecycleScope.launch {
+                SessaoUsuario.isAdmin = userRepository.userIsAdmin(idUsuarioLogado)
+            }
         }
 
         Configuration.getInstance().userAgentValue = packageName
@@ -108,7 +118,7 @@ class HomeActivity : AppCompatActivity() {
         else -> Color.parseColor("#43A047")          // 3,5 para cima: verde
     }
 
-    private fun carregarLocaisDoBanco() {
+    public fun carregarLocaisDoBanco() {
         Log.d("HomeActivity", "carregarLocaisDoBanco: iniciando busca no Supabase")
         lifecycleScope.launch {
             try {
@@ -154,7 +164,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun adicionarPonto(
+    public fun adicionarPonto(
         mapa: MapView,
         idLocal: Int,
         latitude: Double,
@@ -203,7 +213,7 @@ class HomeActivity : AppCompatActivity() {
         mapa.overlays.add(marcador)
     }
 
-    private fun atualizarVisibilidadePOIs() {
+    public fun atualizarVisibilidadePOIs() {
         val visivel = map.zoomLevelDouble >= ZOOM_MINIMO_POI
         map.overlays.filterIsInstance<Marker>().forEach { it.isEnabled = visivel }
         map.invalidate()
