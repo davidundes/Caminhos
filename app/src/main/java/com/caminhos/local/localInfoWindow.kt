@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.caminhos.database.Repository.LocalRepository
 
+// Classe que cuida das informações do local
+
 class localInfoWindow(mapView: MapView) : InfoWindow(R.layout.localcreate, mapView) {
 
     override fun onOpen(item: Any?) {
@@ -22,7 +24,7 @@ class localInfoWindow(mapView: MapView) : InfoWindow(R.layout.localcreate, mapVi
 
 
         val bntExcluir = mView.findViewById<Button>(R.id.buttonExcluir)
-        bntExcluir.visibility = if(SessaoUsuario.isAdmin) view.visibility else View.GONE
+        bntExcluir.visibility = if(SessaoUsuario.isAdmin) view.visibility else View.GONE //Verifica se o usuario é admin para mostrar a opção
 
         val titulo = mView.findViewById<TextView>(R.id.infoTitulo)
         val endereco = mView.findViewById<TextView>(R.id.infoEndereco)

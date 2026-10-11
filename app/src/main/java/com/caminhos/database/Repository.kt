@@ -1,5 +1,6 @@
 package com.caminhos.database
 
+import android.util.Log
 import com.caminhos.database.SupabaseClient.client
 
 import com.caminhos.models.Acessibilidade
@@ -9,6 +10,9 @@ import com.caminhos.models.Local
 import com.caminhos.models.User
 
 import io.github.jan.supabase.postgrest.from
+
+/*Aqui se encontram as funções que ligam o aplicativo com o banco de dados
+* Toda vez que for mexer no banco, utilizar essas funções */
 
 
 object Repository {
@@ -206,13 +210,17 @@ object Repository {
 
         suspend fun deleteLocal(id: Int): Boolean {
             return try {
-                client.from("tb_local").delete {
+                val apagados = client.from("tb_local").delete {
+                    select()
                     filter {
                         eq("id_local", id)
                     }
-                }
-                true
+                }.decodeList<Local>()
+
+                Log.d("LocalRepository", "linhas apagadas: ${apagados.size}")
+                apagados.isNotEmpty()
             } catch (e: Exception) {
+                Log.e("LocalRepository", "Erro ao excluir local", e)
                 false
             }
         }

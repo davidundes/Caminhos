@@ -27,6 +27,7 @@ import io.github.jan.supabase.auth.auth
 import java.util.Locale
 import androidx.core.content.ContextCompat
 import android.graphics.Color
+import android.view.View
 import com.caminhos.local.localInfoWindow
 import com.caminhos.database.Repository.UserRepository
 import com.caminhos.usuario.SessaoUsuario
@@ -49,27 +50,23 @@ class HomeActivity : AppCompatActivity() {
             getSharedPreferences("osmdroid", MODE_PRIVATE)
         )
         val session = SupabaseClient.client.auth.currentSessionOrNull()
-        println(session)
         if (session == null) {
             val intent = Intent(this, LoginActivity()::class.java)
             finish()
             startActivity(intent)
         }
 
-        val userRepository = UserRepository()
-        val idUsuarioLogado = SupabaseClient.client.auth.currentUserOrNull()?.id
-
-        if (idUsuarioLogado != null) {
-            lifecycleScope.launch {
-                SessaoUsuario.isAdmin = userRepository.userIsAdmin(idUsuarioLogado)
-            }
-        }
-
-        Configuration.getInstance().userAgentValue = packageName
-
         setContentView(R.layout.home)
 
         val bntLocal = findViewById<Button>(R.id.btnCriar)
+
+        val userRepository = UserRepository()
+        val idUsuarioLogado = SupabaseClient.client.auth.currentUserOrNull()?.id
+
+        Configuration.getInstance().userAgentValue = packageName
+
+
+
         map = findViewById(R.id.map)
 
         map.setMultiTouchControls(true)
@@ -98,6 +95,12 @@ class HomeActivity : AppCompatActivity() {
         bntLocal.setOnClickListener {
             startActivity(Intent(this, LocalActivity::class.java))
         }
+        if (idUsuarioLogado != null) {
+            lifecycleScope.launch {
+                SessaoUsuario.isAdmin = userRepository.userIsAdmin(idUsuarioLogado)
+                bntLocal.visibility = if(SessaoUsuario.isAdmin) View.VISIBLE else View.GONE
+            }
+        }
     }
 
     override fun onResume() {
@@ -118,7 +121,7 @@ class HomeActivity : AppCompatActivity() {
         else -> Color.parseColor("#43A047")          // 3,5 para cima: verde
     }
 
-    public fun carregarLocaisDoBanco() {
+    private fun carregarLocaisDoBanco() {
         Log.d("HomeActivity", "carregarLocaisDoBanco: iniciando busca no Supabase")
         lifecycleScope.launch {
             try {
@@ -164,7 +167,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    public fun adicionarPonto(
+    private fun adicionarPonto(
         mapa: MapView,
         idLocal: Int,
         latitude: Double,
@@ -213,7 +216,7 @@ class HomeActivity : AppCompatActivity() {
         mapa.overlays.add(marcador)
     }
 
-    public fun atualizarVisibilidadePOIs() {
+    private fun atualizarVisibilidadePOIs() {
         val visivel = map.zoomLevelDouble >= ZOOM_MINIMO_POI
         map.overlays.filterIsInstance<Marker>().forEach { it.isEnabled = visivel }
         map.invalidate()
