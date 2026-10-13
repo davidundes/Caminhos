@@ -28,9 +28,11 @@ import java.util.Locale
 import androidx.core.content.ContextCompat
 import android.graphics.Color
 import android.view.View
+import android.widget.ImageButton
 import com.caminhos.local.localInfoWindow
 import com.caminhos.database.Repository.UserRepository
-import com.caminhos.usuario.SessaoUsuario
+import com.caminhos.menu.menuActivity
+import com.caminhos.usuario.CarregarSessao
 
 class HomeActivity : AppCompatActivity() {
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
@@ -58,10 +60,23 @@ class HomeActivity : AppCompatActivity() {
 
         setContentView(R.layout.home)
 
-        val bntLocal = findViewById<Button>(R.id.btnCriar)
 
+        val bntMenu = findViewById<ImageButton>(R.id.btnMenu)
         val userRepository = UserRepository()
         val idUsuarioLogado = SupabaseClient.client.auth.currentUserOrNull()?.id
+
+        lifecycleScope.launch {
+            val id = idUsuarioLogado ?: return@launch
+            val usuario = userRepository.getUser(id) ?: return@launch
+            val nome = usuario.nome ?: return@launch
+
+            CarregarSessao(
+                id,
+                nome,
+                userRepository.userIsAdmin(id)
+            )
+        }
+
 
         Configuration.getInstance().userAgentValue = packageName
 
@@ -81,6 +96,10 @@ class HomeActivity : AppCompatActivity() {
         map.setMinZoomLevel(13.0)
         map.setMaxZoomLevel(19.0)
 
+
+        bntMenu.setOnClickListener {
+            startActivity(Intent(this, menuActivity::class.java))
+        }
         map.addMapListener(object : MapListener {
             override fun onScroll(event: ScrollEvent?): Boolean {
                 atualizarVisibilidadePOIs()
@@ -92,16 +111,8 @@ class HomeActivity : AppCompatActivity() {
                 return false
             }
         })
-        bntLocal.setOnClickListener {
-            startActivity(Intent(this, LocalActivity::class.java))
-        }
-        if (idUsuarioLogado != null) {
-            lifecycleScope.launch {
-                SessaoUsuario.isAdmin = userRepository.userIsAdmin(idUsuarioLogado)
-                bntLocal.visibility = if(SessaoUsuario.isAdmin) View.VISIBLE else View.GONE
-            }
-        }
     }
+
 
     override fun onResume() {
         super.onResume()

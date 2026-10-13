@@ -36,6 +36,8 @@
             android:exported="false"/>
         <activity android:name=".avaliacao.AvaliacaoActivity" />
         <activity android:name=".local.LocalActivity"/>
+        <activity android:name=".menu.menuActivity"/>
+        <activity android:name=".menu.menuAdm"/>
 
 
     </application>
