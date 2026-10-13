@@ -120,7 +120,6 @@ Relacionamentos: cada avaliação pertence a um usuário e a um local, e cada re
 
 ## Roadmap
 
-- [ ] Cadastro de local por toque longo no mapa, abrindo a tela pelo botão flutuante (FAB)
 - [ ] Tela de detalhes de uma avaliação (`showAvaliacao`) com nota e itens marcados
 - [ ] Upload e exibição de fotos dos locais e avaliações (`tb_image`)
 - [ ] Validação de campos (CPF, CEP, e-mail) nos formulários
