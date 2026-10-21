@@ -8,6 +8,8 @@ import com.caminhos.models.Avaliacao
 import com.caminhos.models.Image
 import com.caminhos.models.Local
 import com.caminhos.models.User
+import io.github.jan.supabase.postgrest.query.Count
+import io.github.jan.supabase.postgrest.query.Order
 
 import io.github.jan.supabase.postgrest.from
 
@@ -44,6 +46,16 @@ object Repository {
                 }
                 .decodeList<Avaliacao>()
         }
+
+        suspend fun getAvaliacoesByUsuario(idUsuario: String): List<Avaliacao> {
+            return SupabaseClient.client.from("tb_avaliacao")
+                .select {
+                    filter { eq("id_usuario", idUsuario) }
+                    order("data", Order.DESCENDING)
+                }
+                .decodeList<Avaliacao>()
+        }
+
 
         suspend fun getAcessibilidade(id: Int): Acessibilidade? {
             return client
@@ -231,6 +243,15 @@ object Repository {
             client
                 .from("tb_usuario")
                 .insert(user)
+        }
+
+        suspend fun getQtdAvaliacoes(idUsuario: String): Int {
+            return SupabaseClient.client.from("tb_avaliacao")
+                .select {
+                    count(Count.EXACT)
+                    filter { eq("id_usuario", idUsuario) }
+                }
+                .countOrNull()?.toInt() ?: 0
         }
 
         suspend fun getUser(id: String): User? {

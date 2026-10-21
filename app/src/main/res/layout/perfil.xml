@@ -35,10 +35,42 @@
         app:layout_constraintTop_toBottomOf="@+id/perfil_foto" />
 
     <TextView
-        android:id="@+id/perfil_qtdAvalicoes"
+        android:id="@+id/perfil_email"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/bg_input"
+        android:gravity="center_vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:text="—"
+        android:textColor="#1B2A41"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/perfil_nome" />
+
+    <TextView
+        android:id="@+id/perfil_cpf"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_input"
+        android:gravity="center_vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:text="—"
+        android:textColor="#1B2A41"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/perfil_email" />
+
+    <TextView
+        android:id="@+id/perfil_qtdAvalicoes"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/bg_input"
         android:gravity="center_vertical"
         android:paddingStart="18dp"
@@ -48,6 +80,6 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/perfil_nome" />
+        app:layout_constraintTop_toBottomOf="@+id/perfil_cpf" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

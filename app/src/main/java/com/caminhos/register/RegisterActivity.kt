@@ -68,6 +68,7 @@ class RegisterActivity: AppCompatActivity() {
                             "Usuário cadastrado com sucesso!",
                             Toast.LENGTH_LONG
                         ).show()
+                        finish()
                     } catch (e: Exception){
                         Toast.makeText(
                             this@RegisterActivity,

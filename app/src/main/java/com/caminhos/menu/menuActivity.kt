@@ -36,7 +36,10 @@ class menuActivity: AppCompatActivity() {
             startActivity(Intent(this, menuPerfil::class.java))
         }
 
-        bnt_avaliacoes.setOnClickListener {  }
+        bnt_avaliacoes.setOnClickListener {
+            val intent = Intent(this, menuAvalicao.MinhasAvaliacoesActivity::class.java)
+            startActivity(intent)
+        }
 
         bnt_adm.setOnClickListener {
             startActivity(Intent(this, menuAdm::class.java))

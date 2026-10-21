@@ -39,7 +39,6 @@ class LoginActivity: AppCompatActivity() {
             val intent = Intent(this, RegisterActivity()::class.java)
             startActivity(intent)
         }
-
         bntLogin.setOnClickListener {
             val emailUsuario = email.text.toString()
             val senhaUsuario = senha.text.toString()
