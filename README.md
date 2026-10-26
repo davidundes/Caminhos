@@ -34,27 +34,43 @@ Aplicativo Android para **mapear e avaliar a acessibilidade de locais** em Jacar
 ## Estrutura do projeto
 
 ```
-com.caminhos
-├── MainActivity.kt            # Ponto de entrada; redireciona para a Home
-├── localInfoWindow.kt         # Balão do marcador com botão "Avaliar"
-├── database/
-│   ├── SupaDB.kt              # SupabaseClient (Auth + Postgrest)
-│   └── Repository.kt          # Repositórios de acesso às tabelas
-├── models/
-│   ├── User.kt
-│   ├── Local.kt
-│   ├── Avaliacao.kt
-│   ├── Acessibilidade.kt
-│   └── Image.kt
-├── home/
-│   ├── HomeActivity.kt        # Mapa, marcadores e resumo de avaliações
-│   └── Avaliacaoactivity.kt   # Tela de avaliação (AvaliacaoActivity)
-├── local/
-│   └── LocalActivity.kt       # Cadastro de novos locais
-├── login/
-│   └── LoginActivity.kt
-└── register/
-    └── RegisterActivity.kt
+## Estrutura do projeto
+
+```text
+Caminhos/
+├── app/
+│   ├── build.gradle.kts
+│   └── src/main/
+│       ├── AndroidManifest.xml
+│       ├── java/com/caminhos/
+│       │   ├── MainActivity.kt
+│       │   ├── database/
+│       │   │   ├── SupaDB.kt
+│       │   │   └── Repository.kt
+│       │   ├── home/
+│       │   │   ├── HomeActivity.kt
+│       │   │   └── Avalicaoactivity.kt
+│       │   ├── local/
+│       │   │   ├── LocalActivity.kt
+│       │   │   └── localInfoWindow.kt
+│       │   ├── login/
+│       │   │   └── LoginActivity.kt
+│       │   ├── register/
+│       │   │   └── RegisterActivity.kt
+│       │   ├── menu/
+│       │   ├── models/
+│       │   └── usuario/
+│       └── res/
+├── gradle/
+│   └── libs.versions.toml
+├── build.gradle.kts
+├── settings.gradle.kts
+├── gradlew
+├── gradlew.bat
+└── README.md
+```
+
+As pastas `menu/`, `models/` e `usuario/` contêm classes auxiliares relacionadas à navegação, aos dados do aplicativo e à sessão do usuário.
 ```
 
 ## Banco de dados
@@ -130,4 +146,5 @@ Veja todos os contribuidores deste projeto:
 
 [Felipe Villalva](https://github.com/felipe-villalva)\
 [Davi Dundes](https://github.com/davidundes)\
-[Lucas Soares](https://github.com/lucasdacostasoaresti-info)
+[Lucas Soares](https://github.com/lucasdacostasoaresti-info)\
+[Rafael Kobrem](https://github.com/rkob26)
