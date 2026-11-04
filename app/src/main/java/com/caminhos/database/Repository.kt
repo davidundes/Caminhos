@@ -13,8 +13,6 @@ import io.github.jan.supabase.postgrest.query.Order
 
 import io.github.jan.supabase.postgrest.from
 
-/*Aqui se encontram as funções que ligam o aplicativo com o banco de dados
-* Toda vez que for mexer no banco, utilizar essas funções */
 
 
 object Repository {
