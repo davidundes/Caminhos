@@ -20,6 +20,7 @@ class RecursoCard(
     private val raiz: View,
     private val def: RecursoDef,
     private val estado: RecursoEstado,
+    host: FotosHost,
     private val aoMudar: () -> Unit
 ) {
     private val verde = Color.parseColor("#2E7D32")
@@ -42,6 +43,9 @@ class RecursoCard(
     private val obs: TextInputEditText = raiz.findViewById(R.id.inputObservacoes)
     private val checkFazFalta: MaterialCheckBox = raiz.findViewById(R.id.checkFazFalta)
     private val alternativa: TextInputEditText = raiz.findViewById(R.id.inputAlternativa)
+
+    /** Seção de fotos deste recurso. */
+    val fotos = FotosSection(raiz, def, estado, host, aoMudar)
 
     init {
         // Textos fixos do recurso
@@ -81,7 +85,7 @@ class RecursoCard(
                 R.id.btnNao -> Resposta.NAO
                 else -> Resposta.NAO_SEI
             }
-            TransitionManager.beginDelayedTransition(card)
+            animarMudanca()
             atualizarVisual()
             aoMudar()
         }
@@ -100,6 +104,11 @@ class RecursoCard(
         checkFazFalta.setOnCheckedChangeListener { _, marcado -> estado.fazFalta = marcado }
     }
 
+    /** Anima a lista toda (e não só este cartão), para os cartões de baixo descerem sem se sobrepor. */
+    private fun animarMudanca() {
+        TransitionManager.beginDelayedTransition((raiz.parent as? ViewGroup) ?: card)
+    }
+
     private fun atualizarLegenda() {
         legenda.text = if (estado.nota > 0) {
             "${estado.nota} · ${rotuloNota(estado.nota)}"
@@ -109,7 +118,7 @@ class RecursoCard(
     }
 
     private fun aplicarExpansao(animar: Boolean) {
-        if (animar) TransitionManager.beginDelayedTransition(card)
+        if (animar) animarMudanca()
         conteudo.visibility = if (estado.expandido) View.VISIBLE else View.GONE
         seta.animate().rotation(if (estado.expandido) 180f else 0f).setDuration(200).start()
         ViewCompat.setStateDescription(header, if (estado.expandido) "Expandido" else "Recolhido")

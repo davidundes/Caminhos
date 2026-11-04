@@ -3,6 +3,7 @@ package com.caminhos.database
 import com.caminhos.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
 
 import io.github.jan.supabase.auth.Auth
 
@@ -13,5 +14,6 @@ object SupabaseClient {
     ) {
         install(Auth)
         install(Postgrest)
+        install(Storage)
     }
 }

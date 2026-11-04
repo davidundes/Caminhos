@@ -107,7 +107,10 @@
                     android:id="@+id/btnSim"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:minHeight="48dp"
                     android:layout_weight="1"
                     android:text="Sim"
                     android:textAllCaps="false" />
@@ -116,7 +119,10 @@
                     android:id="@+id/btnNao"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:minHeight="48dp"
                     android:layout_weight="1"
                     android:text="Não"
                     android:textAllCaps="false" />
@@ -125,7 +131,10 @@
                     android:id="@+id/btnNaoSei"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:minHeight="48dp"
                     android:layout_weight="1.3"
                     android:text="Não sei"
                     android:textAllCaps="false" />
@@ -200,6 +209,7 @@
                         android:inputType="textMultiLine|textCapSentences"
                         android:minLines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
+                <include layout="@layout/view_fotos" />
             </LinearLayout>
 
             <!-- NÃO: faz falta / alternativa -->

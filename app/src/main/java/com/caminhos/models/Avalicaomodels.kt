@@ -6,14 +6,14 @@ enum class Resposta { SIM, NAO, NAO_SEI }
 
 /** Descrição de um recurso. Para criar um novo cartão, basta adicionar um item em RECURSOS. */
 data class RecursoDef(
-    val chave: String,      // mesma chave do campo no banco (ex.: "rampa", "piso_tatil")
+    val chave: String,
     val titulo: String,
     val emoji: String,
-    val nomeCurto: String,  // usado em frases: "Como você avalia a rampa?"
-    val dica: String        // dica exibida abaixo do campo de descrição
+    val nomeCurto: String,
+    val dica: String,
+    val limiteFotos: Int = LIMITE_FOTOS_PADRAO   // <- NOVO (limite configurável)
 )
 
-/** Estado de um cartão. Fica no ViewModel, então sobrevive à rotação e à navegação. */
 class RecursoEstado(
     var resposta: Resposta? = null,
     var nota: Int = 0,
@@ -21,7 +21,8 @@ class RecursoEstado(
     var observacoes: String = "",
     var fazFalta: Boolean = false,
     var alternativa: String = "",
-    var expandido: Boolean = false
+    var expandido: Boolean = false,
+    val fotos: MutableList<FotoAnexo> = mutableListOf()   // <- NOVO
 ) {
     /** Conta como "avaliado": existe com nota, ou foi informado que não existe. */
     val avaliado: Boolean

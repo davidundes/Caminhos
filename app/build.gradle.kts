@@ -62,6 +62,7 @@ dependencies {
     implementation(platform("io.github.jan-tennert.supabase:bom:3.1.2"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:3.0.3")
+    implementation("io.github.jan-tennert.supabase:storage-kt")
 
     implementation("org.osmdroid:osmdroid-android:6.1.20")
 }
