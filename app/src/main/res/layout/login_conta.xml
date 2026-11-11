@@ -54,7 +54,7 @@
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/bg_input"
-        android:hint="Digite seu nome"
+        android:hint="Digite seu Email"
         android:inputType="text"
         android:paddingStart="18dp"
         android:paddingEnd="18dp"
