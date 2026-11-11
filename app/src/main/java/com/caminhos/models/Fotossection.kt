@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.caminhos.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
 import java.io.File
 
 /** Limite padrão de fotos por recurso. Para mudar um recurso: RecursoDef(..., limiteFotos = 6). */
@@ -37,13 +36,11 @@ class FotoPendenteViewModel : ViewModel() {
 }
 
 /**
- * Seção "Fotos da acessibilidade" (view_fotos.xml). Reutilizada em TODOS os cartões:
- * recebe a definição do recurso e o estado (onde ficam as fotos daquele recurso).
+ * Seção "Fotos da acessibilidade" (view_fotos.xml) de UM cartão da lista.
+ * Como a RecyclerView reaproveita os cartões, os dados chegam por vincular().
  */
 class FotosSection(
     private val raiz: View,
-    private val def: RecursoDef,
-    private val estado: RecursoEstado,
     private val host: FotosHost,
     private val aoMudar: () -> Unit
 ) {
@@ -51,11 +48,14 @@ class FotosSection(
     private val contador: TextView = raiz.findViewById(R.id.textContadorFotos)
     private val botaoAdicionar: MaterialButton = raiz.findViewById(R.id.btnAdicionarFoto)
     private val recycler: RecyclerView = raiz.findViewById(R.id.recyclerFotos)
-    private val adapter = FotoAdapter(estado.fotos, ::ampliar, ::remover)
+    private val adapter = FotoAdapter(::ampliar, ::remover)
+
+    private lateinit var def: RecursoDef
+    private lateinit var estado: RecursoEstado
 
     init {
         raiz.findViewById<TextView>(R.id.textOrientacaoFotos).text =
-            "Adicione fotos para mostrar as condições d${def.nomeCurto}"
+            "Adicione fotos para mostrar as condições deste recurso"
 
         val colunas = if (raiz.resources.configuration.screenWidthDp >= 600) 4 else 3
         recycler.layoutManager = GridLayoutManager(contexto, colunas)
@@ -63,6 +63,12 @@ class FotosSection(
         recycler.isNestedScrollingEnabled = false
 
         botaoAdicionar.setOnClickListener { escolherOrigem() }
+    }
+
+    fun vincular(def: RecursoDef, estado: RecursoEstado) {
+        this.def = def
+        this.estado = estado
+        adapter.fotos = estado.fotos
         atualizar()
     }
 
@@ -79,25 +85,6 @@ class FotosSection(
                 if (i == 0) host.tirarFoto(def.chave) else host.escolherDaGaleria(def.chave)
             }
             .setNegativeButton("Cancelar", null)
-            .show()
-    }
-
-    /** Chamado pela Activity depois que a imagem foi capturada/escolhida e preparada. */
-    fun mostrarPreview(uri: Uri) {
-        val conteudo = LayoutInflater.from(contexto).inflate(R.layout.dialog_preview_foto, null)
-        conteudo.findViewById<ImageView>(R.id.imgPreview).setImageURI(uri)
-        val campo = conteudo.findViewById<TextInputEditText>(R.id.inputDescricaoFoto)
-
-        MaterialAlertDialogBuilder(contexto)
-            .setTitle("Pré-visualização")
-            .setView(conteudo)
-            .setCancelable(false)
-            .setPositiveButton("Adicionar") { _, _ ->
-                estado.fotos.add(FotoAnexo(uri, campo.text?.toString().orEmpty().trim()))
-                atualizar()
-                aoMudar()
-            }
-            .setNegativeButton("Cancelar") { _, _ -> ImagemUtil.excluir(uri) }
             .show()
     }
 
@@ -145,10 +132,11 @@ private fun descricaoAcessivel(foto: FotoAnexo, numero: Int): String =
     }
 
 private class FotoAdapter(
-    private val fotos: List<FotoAnexo>,
     private val aoAmpliar: (FotoAnexo) -> Unit,
     private val aoRemover: (Int) -> Unit
 ) : RecyclerView.Adapter<FotoAdapter.VH>() {
+
+    var fotos: List<FotoAnexo> = emptyList()
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val imagem: ImageView = view.findViewById(R.id.imgFoto)

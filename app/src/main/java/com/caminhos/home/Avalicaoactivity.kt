@@ -3,10 +3,9 @@ package com.caminhos.avaliacao
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -14,9 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.caminhos.R
+import com.caminhos.database.AvaliacaoRecurso
+import com.caminhos.database.AvaliacaoRecursoRepository
 import com.caminhos.database.FotoRepository
 import com.caminhos.database.Repository
 import com.caminhos.database.SupabaseClient
@@ -24,8 +27,9 @@ import com.caminhos.models.Acessibilidade
 import com.caminhos.models.Avaliacao
 import com.caminhos.util.aplicarInsetsDoSistema
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import java.io.File
@@ -37,18 +41,13 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
 
     private val avaliacaoRepository = Repository.AvaliacaoRepository()
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
+    private val recursoRepository = AvaliacaoRecursoRepository()
     private val fotoRepository = FotoRepository()
 
     private val viewModel: AvaliacaoViewModel by viewModels()
     private val pendente: FotoPendenteViewModel by viewModels()
-    private val cartoes = mutableMapOf<String, RecursoCard>()
+    private lateinit var adapter: RecursosAdapter
     private var idLocal: Int = -1
-
-    private lateinit var progresso: LinearProgressIndicator
-    private lateinit var textProgresso: TextView
-
-    // total = recursos + nota geral
-    private val totalItens = RECURSOS.size + 1
 
     // ---------- Activity Result APIs (não exigem permissão de câmera/galeria) ----------
 
@@ -90,7 +89,7 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
         )
     }
 
-    /** Reduz/corrige a imagem e abre a pré-visualização no cartão do recurso certo. */
+    /** Reduz/corrige a imagem e abre a pré-visualização. Cada foto fica ligada à chave do recurso. */
     private fun processarFoto(chave: String, origem: Uri) {
         lifecycleScope.launch {
             val preparada = ImagemUtil.prepararImagem(this@AvaliacaoActivity, origem)
@@ -103,8 +102,32 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
                 ).show()
                 return@launch
             }
-            cartoes[chave]?.fotos?.mostrarPreview(preparada)
+            mostrarPreview(chave, preparada)
         }
+    }
+
+    private fun mostrarPreview(chave: String, uri: Uri) {
+        val conteudo = LayoutInflater.from(this).inflate(R.layout.dialog_preview_foto, null)
+        conteudo.findViewById<ImageView>(R.id.imgPreview).setImageURI(uri)
+        val campo = conteudo.findViewById<TextInputEditText>(R.id.inputDescricaoFoto)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Pré-visualização")
+            .setView(conteudo)
+            .setCancelable(false)
+            .setPositiveButton("Adicionar") { _, _ ->
+                val estado = viewModel.estados[chave]
+                val limite = RECURSOS.first { it.chave == chave }.limiteFotos
+                if (estado == null || estado.fotos.size >= limite) {
+                    ImagemUtil.excluir(uri)
+                    Toast.makeText(this, "Limite de $limite fotos para este recurso.", Toast.LENGTH_SHORT).show()
+                } else {
+                    estado.fotos.add(FotoAnexo(uri, campo.text?.toString().orEmpty().trim()))
+                    adapter.notificarRecurso(chave)
+                }
+            }
+            .setNegativeButton("Cancelar") { _, _ -> ImagemUtil.excluir(uri) }
+            .show()
     }
 
     // ---------------------------------- Ciclo de vida ----------------------------------
@@ -121,29 +144,30 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
         }
 
         setContentView(R.layout.activity_avaliacao)
-
         findViewById<View>(R.id.rootAvaliacao).aplicarInsetsDoSistema()
 
-        findViewById<TextView>(R.id.textNomeLocal).text =
-            "📍 " + (intent.getStringExtra("nome_local") ?: "Local selecionado")
+        adapter = RecursosAdapter(
+            estados = viewModel.estados,
+            host = this,
+            nomeLocal = intent.getStringExtra("nome_local") ?: "Local selecionado",
+            aoMudar = { adapter.atualizarTopo() }
+        )
 
-        ViewCompat.setAccessibilityHeading(findViewById(R.id.textTituloAvaliacao), true)
-
-        progresso = findViewById(R.id.progressAvaliacao)
-        textProgresso = findViewById(R.id.textProgresso)
-        progresso.max = totalItens
-
-        configurarNotaGeral()
-        criarCartoes()
-        atualizarProgresso()
+        findViewById<RecyclerView>(R.id.listaRecursos).apply {
+            layoutManager = LinearLayoutManager(this@AvaliacaoActivity)
+            adapter = this@AvaliacaoActivity.adapter
+            // evita o "piscar" do cartão ao ser redesenhado
+            (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
+        }
 
         findViewById<MaterialButton>(R.id.buttonEnviarAvaliacao).setOnClickListener { botao ->
-            // A nota geral continua obrigatória (a tabela de avaliação exige a nota).
-            if (viewModel.notaGeral == 0) {
-                Snackbar.make(botao, "Dê uma nota geral antes de enviar!", Snackbar.LENGTH_LONG).show()
+            // A nota do local agora é calculada a partir das classificações.
+            val nota = viewModel.estados.notaDerivada()
+            if (nota == null) {
+                Snackbar.make(botao, "Avalie pelo menos um recurso antes de enviar.", Snackbar.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            enviarAvaliacao(botao as MaterialButton)
+            enviarAvaliacao(botao as MaterialButton, nota)
         }
     }
 
@@ -155,54 +179,9 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
         }
     }
 
-    // ------------------------------------- Interface -------------------------------------
-
-    private fun configurarNotaGeral() {
-        val rating = findViewById<RatingBar>(R.id.ratingNota)
-        val legenda = findViewById<TextView>(R.id.textLegendaNota)
-
-        fun atualizarLegenda() {
-            legenda.text = if (viewModel.notaGeral > 0) {
-                "${viewModel.notaGeral} · ${rotuloNota(viewModel.notaGeral)}"
-            } else {
-                "Toque nas estrelas para avaliar"
-            }
-        }
-
-        rating.rating = viewModel.notaGeral.toFloat()
-        atualizarLegenda()
-
-        rating.setOnRatingBarChangeListener { _, nota, doUsuario ->
-            if (!doUsuario) return@setOnRatingBarChangeListener
-            viewModel.notaGeral = nota.toInt()
-            atualizarLegenda()
-            atualizarProgresso()
-        }
-    }
-
-    private fun criarCartoes() {
-        val container = findViewById<LinearLayout>(R.id.containerRecursos)
-        RECURSOS.forEach { def ->
-            val view = layoutInflater.inflate(R.layout.item_recurso, container, false)
-            // Os cartões compartilham os mesmos IDs internos; o estado é restaurado pelo ViewModel.
-            view.isSaveFromParentEnabled = false
-            cartoes[def.chave] = RecursoCard(
-                view, def, viewModel.estados.getValue(def.chave), this
-            ) { atualizarProgresso() }
-            container.addView(view)
-        }
-    }
-
-    private fun atualizarProgresso() {
-        val feitos = viewModel.estados.values.count { it.avaliado } +
-                if (viewModel.notaGeral > 0) 1 else 0
-        progresso.setProgressCompat(feitos, true)
-        textProgresso.text = "$feitos de $totalItens itens preenchidos"
-    }
-
     // --------------------------------------- Envio ---------------------------------------
 
-    private fun enviarAvaliacao(botao: MaterialButton) {
+    private fun enviarAvaliacao(botao: MaterialButton, nota: Float) {
         val idUsuario = SupabaseClient.client.auth.currentUserOrNull()?.id
         if (idUsuario == null) {
             Toast.makeText(this, "Você precisa estar logado para avaliar!", Toast.LENGTH_SHORT).show()
@@ -211,42 +190,53 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
 
         val dataAtual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-        // SIM = true. "Não" e "Não sei" = false (mesmo comportamento dos antigos checkboxes).
-        val existe = viewModel.estados.mapValues { it.value.resposta == Resposta.SIM }
+        // Para a tabela antiga (booleans): "existe" = Adequado, Parcial ou Inadequado.
+        fun existe(chave: String): Boolean {
+            val c = viewModel.estados[chave]?.classificacao
+            return c != null && c != Classificacao.NAO_POSSUI
+        }
 
         botao.isEnabled = false // evita envio duplicado
 
         lifecycleScope.launch {
             try {
-                val avaliacao = Avaliacao(
-                    id_usuario = idUsuario,
-                    id_local = idLocal,
-                    nota = viewModel.notaGeral.toFloat(),
-                    data = dataAtual
+                val avaliacaoCriada = avaliacaoRepository.createAvaliacao(
+                    Avaliacao(id_usuario = idUsuario, id_local = idLocal, nota = nota, data = dataAtual)
                 )
-
-                val avaliacaoCriada = avaliacaoRepository.createAvaliacao(avaliacao)
                 val idAvaliacao = requireNotNull(avaliacaoCriada.id_avaliacao) {
                     "id_avaliacao não retornado pelo banco"
                 }
 
-                val acessibilidade = Acessibilidade(
-                    id_avaliacao = idAvaliacao,
-                    rampa = existe["rampa"] == true,
-                    elevador = existe["elevador"] == true,
-                    banheiro_acessivel = existe["banheiro_acessivel"] == true,
-                    piso_tatil = existe["piso_tatil"] == true,
-                    vaga_pcd = existe["vaga_pcd"] == true,
-                    entrada_acessivel = existe["entrada_acessivel"] == true,
-                    corrimao = existe["corrimao"] == true,
-                    portas_largas = existe["portas_largas"] == true,
-                    sinalizacao = existe["sinalizacao"] == true,
-                    iluminacao = existe["iluminacao"] == true
+                // 1) Tabela existente: mantém o mapa e as contagens funcionando.
+                acessibilidadeRepository.createAcessibilidade(
+                    Acessibilidade(
+                        id_avaliacao = idAvaliacao,
+                        rampa = existe("rampa"),
+                        elevador = existe("elevador"),
+                        banheiro_acessivel = existe("banheiro_acessivel"),
+                        piso_tatil = existe("piso_tatil"),
+                        vaga_pcd = existe("vaga_pcd"),
+                        entrada_acessivel = existe("entrada_acessivel"),
+                        corrimao = existe("corrimao"),
+                        portas_largas = existe("portas_largas"),
+                        sinalizacao = existe("sinalizacao"),
+                        iluminacao = existe("iluminacao")
+                    )
                 )
 
-                acessibilidadeRepository.createAcessibilidade(acessibilidade)
+                // 2) Nova tabela: classificação + descrição de cada recurso avaliado.
+                val itens = viewModel.estados.mapNotNull { (chave, estado) ->
+                    val c = estado.classificacao ?: return@mapNotNull null
+                    AvaliacaoRecurso(
+                        id_avaliacao = idAvaliacao,
+                        recurso = chave,
+                        classificacao = c.chave,
+                        descricao = estado.descricao.trim().ifBlank { null }
+                    )
+                }
+                recursoRepository.createAll(itens)
 
-                // As fotos só saem do celular aqui, quando o usuário envia a avaliação.
+                // 3) Fotos: só saem do celular aqui, quando o usuário envia a avaliação.
                 val falhas = enviarFotos(idAvaliacao, idUsuario)
 
                 Toast.makeText(
@@ -258,29 +248,22 @@ class AvaliacaoActivity : AppCompatActivity(), FotosHost {
                 finish()
             } catch (e: Exception) {
                 botao.isEnabled = true
-                Toast.makeText(
-                    this@AvaliacaoActivity,
-                    "Erro ao enviar avaliação!",
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this@AvaliacaoActivity, "Erro ao enviar avaliação!", Toast.LENGTH_LONG).show()
                 Log.e("Erro ao avaliar ", "${e.message}")
             }
         }
     }
 
-    /** Envia as fotos de cada recurso, ligadas pelo id da avaliação e pela chave do recurso. */
+    /** Envia as fotos de cada recurso avaliado, ligadas pelo id da avaliação e pela chave do recurso. */
     private suspend fun enviarFotos(idAvaliacao: Int, idUsuario: String): Int {
         var falhas = 0
         viewModel.estados.forEach { (chave, estado) ->
-            // Fotos só valem para recursos marcados como "Sim" (a seção fica nesse bloco).
-            if (estado.resposta != Resposta.SIM) return@forEach
+            if (!estado.avaliado) return@forEach // recurso sem avaliação: fotos ignoradas
 
             estado.fotos.forEachIndexed { indice, foto ->
                 try {
                     val arquivo = File(requireNotNull(foto.uri.path))
-                    fotoRepository.enviarFoto(
-                        idAvaliacao, idUsuario, chave, indice, arquivo, foto.descricao
-                    )
+                    fotoRepository.enviarFoto(idAvaliacao, idUsuario, chave, indice, arquivo, foto.descricao)
                 } catch (e: Exception) {
                     falhas++
                     Log.e("AvaliacaoActivity", "Erro ao enviar foto de $chave", e)
