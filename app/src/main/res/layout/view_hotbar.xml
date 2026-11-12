@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inflado pela HotbarView. Não use diretamente: use <com.caminhos.ui.HotbarView /> -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:id="@+id/hotbarBarra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_hotbar_home"
+        android:clipChildren="false"
+        android:elevation="10dp">
+
+        <LinearLayout
+            android:id="@+id/hotbarTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:minHeight="96dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <!-- 1. AVALIAÇÕES -->
+            <LinearLayout
+                android:id="@+id/tabAvaliacoes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:clipChildren="false"
+                android:focusable="true"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="16dp">
+
+                <FrameLayout
+                    android:id="@+id/caixaAvaliacoes"
+                    android:layout_width="56dp"
+                    android:layout_height="32dp">
+
+                    <View
+                        android:id="@+id/pillAvaliacoes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="0"
+                        android:background="@drawable/bg_hotbar_icone_ativo"
+                        android:importantForAccessibility="no" />
+
+                    <ImageView
+                        android:id="@+id/iconAvaliacoes"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_hotbar_avaliacoes" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/labelAvaliacoes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:importantForAccessibility="no"
+                    android:text="Avaliações"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- 2. HOME (destaque central) -->
+            <LinearLayout
+                android:id="@+id/tabHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:clipChildren="false"
+                android:focusable="true"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp">
+
+                <FrameLayout
+                    android:id="@+id/homeCirculo"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:background="@drawable/bg_hotbar_home"
+                    android:elevation="4dp">
+
+                    <View
+                        android:id="@+id/homeAnel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="0"
+                        android:background="@drawable/bg_hotbar_home_anel"
+                        android:importantForAccessibility="no" />
+
+                    <ImageView
+                        android:id="@+id/iconHome"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_hotbar_home" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/labelHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:importantForAccessibility="no"
+                    android:text="Home"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- 3. PERFIL -->
+            <LinearLayout
+                android:id="@+id/tabPerfil"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:clipChildren="false"
+                android:focusable="true"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="16dp">
+
+                <FrameLayout
+                    android:id="@+id/caixaPerfil"
+                    android:layout_width="56dp"
+                    android:layout_height="32dp">
+
+                    <View
+                        android:id="@+id/pillPerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="0"
+                        android:background="@drawable/bg_hotbar_icone_ativo"
+                        android:importantForAccessibility="no" />
+
+                    <ImageView
+                        android:id="@+id/iconPerfil"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_hotbar_perfil" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/labelPerfil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:importantForAccessibility="no"
+                    android:text="Perfil"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Indicador deslizante (gradiente azul -> amarelo) -->
+        <View
+            android:id="@+id/hotbarIndicador"
+            android:layout_width="28dp"
+            android:layout_height="4dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/bg_hotbar_indicador"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+</merge>

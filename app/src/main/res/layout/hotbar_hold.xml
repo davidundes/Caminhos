@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A tela anterior fica parada enquanto a nova aparece (evita "piscar" o fundo). -->
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="180"
+    android:fromAlpha="1.0"
+    android:toAlpha="1.0" />

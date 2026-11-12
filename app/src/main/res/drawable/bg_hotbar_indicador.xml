@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Indicador que desliza entre as abas: gradiente azul -> amarelo -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="0"
+        android:endColor="#FFC928"
+        android:startColor="#1769AA" />
+    <corners android:radius="2dp" />
+</shape>

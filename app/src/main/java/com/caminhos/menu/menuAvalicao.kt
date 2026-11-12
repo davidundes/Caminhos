@@ -16,6 +16,9 @@ import com.caminhos.R
 import com.caminhos.database.Repository
 import com.caminhos.database.SupabaseClient
 import com.caminhos.models.Acessibilidade
+import com.caminhos.ui.Aba
+import com.caminhos.ui.HotbarNavigator
+import com.caminhos.ui.HotbarView
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import kotlin.collections.get
@@ -46,6 +49,9 @@ class menuAvalicao {
             }
 
             carregarAvaliacoes()
+
+            HotbarNavigator.configurarVoltar(this)
+            findViewById<HotbarView>(R.id.hotbar).reservarEspacoEm(findViewById(R.id.conteudoPagina))
         }
 
         private fun carregarAvaliacoes() {
@@ -84,6 +90,11 @@ class menuAvalicao {
                     Toast.makeText(this@MinhasAvaliacoesActivity, "Erro ao carregar avaliações", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        override fun onResume() {
+            super.onResume()
+            findViewById<HotbarView>(R.id.hotbar).sincronizar(Aba.AVALIACOES)
         }
 
         private fun itensMarcados(a: Acessibilidade?): List<String> {

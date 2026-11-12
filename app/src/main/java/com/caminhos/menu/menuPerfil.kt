@@ -12,6 +12,9 @@ import com.caminhos.database.Repository.UserRepository
 import com.caminhos.database.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
+import com.caminhos.ui.Aba
+import com.caminhos.ui.HotbarNavigator
+import com.caminhos.ui.HotbarView
 
 class menuPerfil : AppCompatActivity() {
 
@@ -33,6 +36,8 @@ class menuPerfil : AppCompatActivity() {
         qtdAvaliacoes = findViewById(R.id.perfil_qtdAvalicoes)
 
         carregarPerfil()
+        HotbarNavigator.configurarVoltar(this)
+        findViewById<HotbarView>(R.id.hotbar).reservarEspacoEm(findViewById(R.id.conteudoPagina))
     }
 
     private fun carregarPerfil() {
@@ -64,6 +69,13 @@ class menuPerfil : AppCompatActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        findViewById<HotbarView>(R.id.hotbar).sincronizar(Aba.PERFIL)
+    }
+
+
 
     // 12345678900 -> 123.456.789-00
     private fun formatarCpf(valor: String?): String {

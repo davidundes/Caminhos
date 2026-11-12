@@ -12,6 +12,8 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.caminhos.database.SupabaseClient
 import com.caminhos.login.LoginActivity
+import com.caminhos.ui.Aba
+import com.caminhos.ui.HotbarNavigator
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import com.caminhos.usuario.ApagarSessao
@@ -33,12 +35,11 @@ class menuActivity: AppCompatActivity() {
 
 
         bnt_perfil.setOnClickListener {
-            startActivity(Intent(this, menuPerfil::class.java))
+            HotbarNavigator.abrir(this, Aba.PERFIL)
         }
 
         bnt_avaliacoes.setOnClickListener {
-            val intent = Intent(this, menuAvalicao.MinhasAvaliacoesActivity::class.java)
-            startActivity(intent)
+            HotbarNavigator.abrir(this, Aba.AVALIACOES)
         }
 
         bnt_adm.setOnClickListener {

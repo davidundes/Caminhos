@@ -33,6 +33,8 @@ import com.caminhos.local.localInfoWindow
 import com.caminhos.database.Repository.UserRepository
 import com.caminhos.menu.menuActivity
 import com.caminhos.usuario.CarregarSessao
+import com.caminhos.ui.Aba
+import com.caminhos.ui.HotbarView
 
 class HomeActivity : AppCompatActivity() {
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
@@ -117,6 +119,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         map.onResume()
+        findViewById<HotbarView>(R.id.hotbar).sincronizar(Aba.HOME)   // <- NOVO
         carregarLocaisDoBanco()
     }
 
