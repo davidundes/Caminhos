@@ -2,16 +2,26 @@ package com.caminhos.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
+import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.caminhos.R
 import com.caminhos.database.Repository
-import com.caminhos.local.LocalActivity
+import com.caminhos.database.Repository.UserRepository
+import com.caminhos.database.SupabaseClient
+import com.caminhos.local.localInfoWindow
+import com.caminhos.login.LoginActivity
+import com.caminhos.menu.menuActivity
 import com.caminhos.models.Local
+import com.caminhos.ui.Aba
+import com.caminhos.ui.HotbarView
+import com.caminhos.usuario.CarregarSessao
+import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapListener
@@ -21,28 +31,24 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import com.caminhos.database.SupabaseClient
-import com.caminhos.login.LoginActivity
-import io.github.jan.supabase.auth.auth
 import java.util.Locale
-import androidx.core.content.ContextCompat
-import android.graphics.Color
-import android.view.View
-import android.widget.ImageButton
-import com.caminhos.local.localInfoWindow
-import com.caminhos.database.Repository.UserRepository
-import com.caminhos.menu.menuActivity
-import com.caminhos.usuario.CarregarSessao
-import com.caminhos.ui.Aba
-import com.caminhos.ui.HotbarView
 
 class HomeActivity : AppCompatActivity() {
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
     private val localRepository = Repository.LocalRepository()
     private lateinit var map: MapView
+
     private companion object {
         const val ZOOM_MINIMO_POI = 17.0
     }
+
+    /**
+     * Cada recurso agora é texto: "Adequado", "Parcialmente adequado", "Inadequado",
+     * "Não possui" ou null (não avaliado). O recurso "existe" no local quando é
+     * adequado ou parcialmente adequado.
+     */
+    private fun String?.ofereceRecurso(): Boolean =
+        this == "Adequado" || this == "Parcialmente adequado"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +68,6 @@ class HomeActivity : AppCompatActivity() {
 
         setContentView(R.layout.home)
 
-
         val bntMenu = findViewById<ImageButton>(R.id.btnMenu)
         val userRepository = UserRepository()
         val idUsuarioLogado = SupabaseClient.client.auth.currentUserOrNull()?.id
@@ -79,10 +84,7 @@ class HomeActivity : AppCompatActivity() {
             )
         }
 
-
         Configuration.getInstance().userAgentValue = packageName
-
-
 
         map = findViewById(R.id.map)
 
@@ -97,7 +99,6 @@ class HomeActivity : AppCompatActivity() {
 
         map.setMinZoomLevel(13.0)
         map.setMaxZoomLevel(19.0)
-
 
         bntMenu.setOnClickListener {
             startActivity(Intent(this, menuActivity::class.java))
@@ -115,11 +116,10 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-
     override fun onResume() {
         super.onResume()
         map.onResume()
-        findViewById<HotbarView>(R.id.hotbar).sincronizar(Aba.HOME)   // <- NOVO
+        findViewById<HotbarView>(R.id.hotbar).sincronizar(Aba.HOME)
         carregarLocaisDoBanco()
     }
 
@@ -154,11 +154,13 @@ class HomeActivity : AppCompatActivity() {
                         "HomeActivity",
                         "Adicionando marcador '${local.nome}' em (${local.latitude}, ${local.longitude})"
                     )
-                    val media = try {
+
+                    // nota agora é Float? (calculada pela trigger): ignora avaliações sem nota.
+                    val media: Double? = try {
                         acessibilidadeRepository.getAvaliacoesByLocal(id)
-                            .map { it.nota }
-                            .average()
-                            .takeIf { !it.isNaN() }
+                            .mapNotNull { it.nota }
+                            .takeIf { it.isNotEmpty() }
+                            ?.average()
                     } catch (e: Exception) {
                         null
                     }
@@ -195,7 +197,6 @@ class HomeActivity : AppCompatActivity() {
             position = GeoPoint(latitude, longitude)
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             icon = ContextCompat.getDrawable(this@HomeActivity, R.drawable.ic_marker)
-
                 ?.mutate()
                 ?.apply { setTint(corPorMedia(media)) }
 
@@ -239,21 +240,26 @@ class HomeActivity : AppCompatActivity() {
     private suspend fun montarTextoAvaliacoes(idLocal: Int): String {
         val avaliacoes = acessibilidadeRepository.getAvaliacoesByLocal(idLocal)
         if (avaliacoes.isEmpty()) return "☆ Sem avaliações ainda"
-        val media = avaliacoes.map { it.nota }.average()
+
+        val media: Double? = avaliacoes
+            .mapNotNull { it.nota }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
+
         val ids = avaliacoes.mapNotNull { it.id_avaliacao }
         val acessibilidades = acessibilidadeRepository.getAcessibilidadesByAvaliacoes(ids)
 
         val itens = listOf(
-            "Rampa" to acessibilidades.count { it.rampa == true },
-            "Elevador" to acessibilidades.count { it.elevador == true },
-            "Banheiro acessível" to acessibilidades.count { it.banheiro_acessivel == true },
-            "Piso tátil" to acessibilidades.count { it.piso_tatil == true },
-            "Vaga PCD" to acessibilidades.count { it.vaga_pcd == true },
-            "Entrada acessível" to acessibilidades.count { it.entrada_acessivel == true },
-            "Corrimão" to acessibilidades.count { it.corrimao == true },
-            "Portas largas" to acessibilidades.count { it.portas_largas == true },
-            "Sinalização" to acessibilidades.count { it.sinalizacao == true },
-            "Iluminação" to acessibilidades.count { it.iluminacao == true }
+            "Rampa" to acessibilidades.count { it.rampa.ofereceRecurso() },
+            "Elevador" to acessibilidades.count { it.elevador.ofereceRecurso() },
+            "Banheiro acessível" to acessibilidades.count { it.banheiro_acessivel.ofereceRecurso() },
+            "Piso tátil" to acessibilidades.count { it.piso_tatil.ofereceRecurso() },
+            "Vaga PCD" to acessibilidades.count { it.vaga_pcd.ofereceRecurso() },
+            "Entrada acessível" to acessibilidades.count { it.entrada_acessivel.ofereceRecurso() },
+            "Corrimão" to acessibilidades.count { it.corrimao.ofereceRecurso() },
+            "Portas largas" to acessibilidades.count { it.portas_largas.ofereceRecurso() },
+            "Sinalização" to acessibilidades.count { it.sinalizacao.ofereceRecurso() },
+            "Iluminação" to acessibilidades.count { it.iluminacao.ofereceRecurso() }
         ).filter { it.second > 0 }
             .sortedByDescending { it.second }
 
@@ -261,7 +267,11 @@ class HomeActivity : AppCompatActivity() {
         val palavraAvaliacao = if (total == 1) "avaliação" else "avaliações"
 
         return buildString {
-            append("★ %.1f · %d %s".format(Locale("pt", "BR"), media, total, palavraAvaliacao))
+            if (media != null) {
+                append("★ %.1f · %d %s".format(Locale("pt", "BR"), media, total, palavraAvaliacao))
+            } else {
+                append("☆ %d %s (sem nota ainda)".format(Locale("pt", "BR"), total, palavraAvaliacao))
+            }
             if (itens.isNotEmpty()) {
                 append("\n\nAcessibilidade")
                 itens.forEach { (nome, qtd) ->

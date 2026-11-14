@@ -21,13 +21,21 @@ import com.caminhos.ui.HotbarNavigator
 import com.caminhos.ui.HotbarView
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
-import kotlin.collections.get
+import java.util.Locale
+
+/**
+ * Cada recurso é texto: "Adequado", "Parcialmente adequado", "Inadequado",
+ * "Não possui" ou null (não avaliado). O recurso "existe" no local quando
+ * é adequado ou parcialmente adequado.
+ */
+private fun String?.ofereceRecurso(): Boolean =
+    this == "Adequado" || this == "Parcialmente adequado"
 
 class menuAvalicao {
 
     data class AvaliacaoItem(
         val local: String,
-        val nota: Float,
+        val nota: Float?,   // null enquanto a trigger do banco não calculou a nota
         val data: String,
         val itens: List<String>
     )
@@ -79,7 +87,7 @@ class menuAvalicao {
                         AvaliacaoItem(
                             local = locais[av.id_local]?.nome ?: "Local removido",
                             nota = av.nota,
-                            data = av.data?.toString() ?: "",
+                            data = formatarData(av.data),
                             itens = itensMarcados(acessPorAvaliacao[av.id_avaliacao])
                         )
                     }
@@ -87,7 +95,11 @@ class menuAvalicao {
 
                 } catch (e: Exception) {
                     Log.e("MinhasAvaliacoes", "Erro ao carregar avaliações", e)
-                    Toast.makeText(this@MinhasAvaliacoesActivity, "Erro ao carregar avaliações", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MinhasAvaliacoesActivity,
+                        "Erro ao carregar avaliações",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -95,6 +107,13 @@ class menuAvalicao {
         override fun onResume() {
             super.onResume()
             findViewById<HotbarView>(R.id.hotbar).sincronizar(Aba.AVALIACOES)
+        }
+
+        /** O banco devolve "2026-11-14T15:30:00.123": mostra só a data como dd/MM/yyyy. */
+        private fun formatarData(data: String?): String {
+            if (data.isNullOrBlank()) return ""
+            val dia = data.take(10).split("-")
+            return if (dia.size == 3) "${dia[2]}/${dia[1]}/${dia[0]}" else data
         }
 
         private fun itensMarcados(a: Acessibilidade?): List<String> {
@@ -110,7 +129,7 @@ class menuAvalicao {
                 "Portas largas" to a.portas_largas,
                 "Sinalização" to a.sinalizacao,
                 "Iluminação" to a.iluminacao
-            ).filter { it.second == true }.map { it.first }
+            ).filter { it.second.ofereceRecurso() }.map { it.first }
         }
     }
 
@@ -139,7 +158,9 @@ class menuAvalicao {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = lista[position]
             holder.local.text = item.local
-            holder.nota.text = "★ %.1f".format(java.util.Locale("pt", "BR"), item.nota)
+            holder.nota.text = item.nota
+                ?.let { "★ %.1f".format(Locale("pt", "BR"), it) }
+                ?: "Sem nota"
             holder.data.text = item.data
             holder.data.visibility = if (item.data.isBlank()) View.GONE else View.VISIBLE
             holder.checks.text =

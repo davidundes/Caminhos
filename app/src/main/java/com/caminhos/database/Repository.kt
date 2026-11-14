@@ -2,25 +2,66 @@ package com.caminhos.database
 
 import android.util.Log
 import com.caminhos.database.SupabaseClient.client
-
 import com.caminhos.models.Acessibilidade
 import com.caminhos.models.Avaliacao
+import com.caminhos.models.AvaliacaoCriada
 import com.caminhos.models.Image
 import com.caminhos.models.Local
+import com.caminhos.models.NovaAvaliacao
 import com.caminhos.models.User
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Count
 import io.github.jan.supabase.postgrest.query.Order
-
-import io.github.jan.supabase.postgrest.from
-
-
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
 
 object Repository {
+
     class AcessibilidadeRepository {
+
+        /**
+         * Grava as respostas de acessibilidade de uma avaliação.
+         * O banco já cria uma linha vazia para cada avaliação nova (trigger trg_criar_acessibilidade),
+         * então primeiro tenta ATUALIZAR essa linha; só insere se ela não existir.
+         * A nota é recalculada pelo trigger de tb_acessibilidade (INSERT e UPDATE).
+         */
+        suspend fun createAcessibilidade(linha: JsonObject) {
+            val idAvaliacao = requireNotNull(linha["id_avaliacao"]?.jsonPrimitive?.int) {
+                "id_avaliacao é obrigatório"
+            }
+
+            val atualizadas = client
+                .from("tb_acessibilidade")
+                .update(linha) {
+                    select()
+                    filter { eq("id_avaliacao", idAvaliacao) }
+                }
+                .decodeList<AvaliacaoCriada>()
+
+            if (atualizadas.isEmpty()) {
+                client
+                    .from("tb_acessibilidade")
+                    .insert(linha)
+            }
+        }
+
         suspend fun createAcessibilidade(acessibilidade: Acessibilidade) {
             client
                 .from("tb_acessibilidade")
                 .insert(acessibilidade)
+        }
+
+        /** Linha bruta de tb_acessibilidade de uma avaliação (para preencher a tela de edição). */
+        suspend fun getAcessibilidadeBruta(idAvaliacao: Int): JsonObject? {
+            return client
+                .from("tb_acessibilidade")
+                .select {
+                    filter { eq("id_avaliacao", idAvaliacao) }
+                }
+                .decodeSingleOrNull<JsonObject>()
         }
 
         suspend fun getAcessibilidadesByAvaliacoes(ids: List<Int>): List<Acessibilidade> {
@@ -46,14 +87,14 @@ object Repository {
         }
 
         suspend fun getAvaliacoesByUsuario(idUsuario: String): List<Avaliacao> {
-            return SupabaseClient.client.from("tb_avaliacao")
+            return client
+                .from("tb_avaliacao")
                 .select {
                     filter { eq("id_usuario", idUsuario) }
                     order("data", Order.DESCENDING)
                 }
                 .decodeList<Avaliacao>()
         }
-
 
         suspend fun getAcessibilidade(id: Int): Acessibilidade? {
             return client
@@ -89,19 +130,19 @@ object Repository {
                     }
                 }
         }
-
     }
 
     class AvaliacaoRepository {
-        // Insere a avaliação e devolve o registro já com o id_avaliacao
-        // gerado pelo banco, necessário para vincular a Acessibilidade.
-        suspend fun createAvaliacao(avaliacao: Avaliacao): Avaliacao {
+
+        // Não envia nota nem data: o banco define as duas.
+        // Devolve o id_avaliacao gerado, necessário para vincular a acessibilidade e as fotos.
+        suspend fun createAvaliacao(nova: NovaAvaliacao): AvaliacaoCriada {
             return client
                 .from("tb_avaliacao")
-                .insert(avaliacao) {
+                .insert(nova) {
                     select()
                 }
-                .decodeSingle<Avaliacao>()
+                .decodeSingle<AvaliacaoCriada>()
         }
 
         suspend fun getAvaliacao(id: Int): Avaliacao? {
@@ -115,6 +156,8 @@ object Repository {
                 .decodeSingleOrNull<Avaliacao>()
         }
 
+        // Atualiza só o comentário: nota e data são controladas pelo banco
+        // e não podem ser sobrescritas por um objeto Avaliacao com campos nulos.
         suspend fun updateAvaliacao(avaliacao: Avaliacao) {
             val idAvaliacao = requireNotNull(avaliacao.id_avaliacao) {
                 "O id_avaliacao não pode ser nulo"
@@ -122,7 +165,9 @@ object Repository {
 
             client
                 .from("tb_avaliacao")
-                .update(avaliacao) {
+                .update(
+                    buildJsonObject { put("comentario", avaliacao.comentario) }
+                ) {
                     filter {
                         eq("id_avaliacao", idAvaliacao)
                     }
@@ -147,15 +192,27 @@ object Repository {
                 .insert(image)
         }
 
+        // A chave primária de tb_image é id_foto (não id_image).
         suspend fun getImage(id: Int): Image? {
             return client
                 .from("tb_image")
                 .select {
                     filter {
-                        eq("id_image", id)
+                        eq("id_foto", id)
                     }
                 }
                 .decodeSingleOrNull<Image>()
+        }
+
+        /** Quantas fotos já existem na avaliação (evita reaproveitar o mesmo índice ao editar). */
+        suspend fun contarFotosDaAvaliacao(idAvaliacao: Int): Int {
+            return client
+                .from("tb_image")
+                .select {
+                    count(Count.EXACT)
+                    filter { eq("id_avaliacao", idAvaliacao) }
+                }
+                .countOrNull()?.toInt() ?: 0
         }
 
         suspend fun updateImage(image: Image) {
@@ -163,7 +220,7 @@ object Repository {
                 .from("tb_image")
                 .update(image) {
                     filter {
-                        eq("id_image", image.id_image)
+                        eq("id_foto", image.id_image)
                     }
                 }
         }
@@ -173,7 +230,7 @@ object Repository {
                 .from("tb_image")
                 .delete {
                     filter {
-                        eq("id_image", id)
+                        eq("id_foto", id)
                     }
                 }
         }
@@ -244,7 +301,8 @@ object Repository {
         }
 
         suspend fun getQtdAvaliacoes(idUsuario: String): Int {
-            return SupabaseClient.client.from("tb_avaliacao")
+            return client
+                .from("tb_avaliacao")
                 .select {
                     count(Count.EXACT)
                     filter { eq("id_usuario", idUsuario) }
