@@ -3,11 +3,11 @@ package com.caminhos.database
 import android.util.Log
 import com.caminhos.database.SupabaseClient.client
 import com.caminhos.models.Acessibilidade
-import com.caminhos.models.Avaliacao
-import com.caminhos.models.AvaliacaoCriada
+import com.caminhos.avalicao.Avaliacao
+import com.caminhos.avalicao.AvaliacaoCriada
 import com.caminhos.models.Image
 import com.caminhos.models.Local
-import com.caminhos.models.NovaAvaliacao
+import com.caminhos.avalicao.NovaAvaliacao
 import com.caminhos.models.User
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Count

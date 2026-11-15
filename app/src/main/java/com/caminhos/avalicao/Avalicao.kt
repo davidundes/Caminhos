@@ -1,4 +1,4 @@
-package com.caminhos.models
+package com.caminhos.avalicao
 
 import kotlinx.serialization.Serializable
 

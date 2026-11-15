@@ -22,7 +22,7 @@ import com.caminhos.R
 import com.caminhos.database.FotoRepository
 import com.caminhos.database.Repository
 import com.caminhos.database.SupabaseClient
-import com.caminhos.models.NovaAvaliacao
+import com.caminhos.avalicao.NovaAvaliacao
 import com.caminhos.util.aplicarInsetsDoSistema
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
