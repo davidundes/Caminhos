@@ -1,216 +1,412 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_local.xml
+     Incluído por activity_insercao.xml (id painelFormulario). Não é mais usado com setContentView. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F8FC"
-    android:fillViewport="true">
+    android:clickable="true"
+    android:elevation="12dp"
+    android:fillViewport="true"
+    android:focusable="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/btnRegisterLocal"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingStart="28dp"
-        android:paddingTop="48dp"
+        android:paddingTop="16dp"
         android:paddingEnd="28dp"
         android:paddingBottom="32dp">
 
         <TextView
-            android:id="@+id/textTituloLocal"
-            android:layout_width="0dp"
+            android:id="@+id/buttonVoltarMapa"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="-12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Voltar para o mapa"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="←"
+            android:textColor="#1B2A41"
+            android:textSize="26sp" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="Cadastrar local"
             android:textColor="#1B2A41"
             android:textSize="28sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textSubtituloLocal"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:gravity="center"
-            android:text="Informe os dados do local"
+            android:text="Campos com * são obrigatórios"
             android:textColor="#6B7A90"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTituloLocal" />
+            android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/textBoxNomeLocal"
-            android:layout_width="0dp"
+        <!-- Localização escolhida no mapa -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="18dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/textLocalizacaoEscolhida"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#1B2A41"
+                android:textSize="14sp"
+                tools:text="Localização escolhida: -23.30530, -45.98523" />
+
+            <TextView
+                android:id="@+id/buttonAlterarNoMapa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="44dp"
+                android:gravity="center_vertical"
+                android:text="Alterar"
+                android:textColor="#21BBFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Nome -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="Nome Do Local"
+            android:layout_marginTop="24dp"
+            android:text="Nome do local *"
             android:textColor="#1B2A41"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textSubtituloLocal" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextNomeEndereco"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
             android:hint="Ex.: Shopping Center"
-            android:inputType="text"
+            android:importantForAutofill="no"
+            android:inputType="textCapWords"
+            android:maxLength="100"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:textColor="#1B2A41"
             android:textColorHint="#9AA7B8"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textBoxNomeLocal" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textBoxEndereco"
-            android:layout_width="0dp"
+            android:id="@+id/erroNome"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:layout_marginStart="4dp"
-            android:text="Endereço"
+            android:layout_marginTop="4dp"
+            android:textColor="#E5484D"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- Endereço -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="18dp"
+            android:text="Endereço *"
             android:textColor="#1B2A41"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextNomeEndereco" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextEndereco"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
             android:hint="Rua, número e bairro"
-            android:inputType="text"
+            android:importantForAutofill="no"
+            android:inputType="textCapWords|textPostalAddress"
+            android:maxLength="200"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:textColor="#1B2A41"
             android:textColorHint="#9AA7B8"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textBoxEndereco" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textBoxtCep"
-            android:layout_width="0dp"
+            android:id="@+id/erroEndereco"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:layout_marginStart="4dp"
-            android:text="Cep"
+            android:layout_marginTop="4dp"
+            android:textColor="#E5484D"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- CEP -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="18dp"
+            android:text="CEP *"
             android:textColor="#1B2A41"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextEndereco" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextCep"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
             android:hint="00000-000"
+            android:importantForAutofill="no"
             android:inputType="number"
+            android:maxLength="9"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:textColor="#1B2A41"
             android:textColorHint="#9AA7B8"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textBoxtCep" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textBoxTelefone"
-            android:layout_width="0dp"
+            android:id="@+id/erroCep"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:layout_marginStart="4dp"
-            android:text="Telefone"
+            android:layout_marginTop="4dp"
+            android:textColor="#E5484D"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- Telefone -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="18dp"
+            android:text="Telefone (opcional)"
             android:textColor="#1B2A41"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextCep" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextTelefone"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
             android:hint="(00) 00000-0000"
+            android:importantForAutofill="no"
             android:inputType="phone"
+            android:maxLength="15"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:textColor="#1B2A41"
             android:textColorHint="#9AA7B8"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textBoxTelefone" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textBoxHorario"
-            android:layout_width="0dp"
+            android:id="@+id/erroTelefone"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:textColor="#E5484D"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- Horário -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="Horário de funcionamento (opcional)"
+                android:textColor="#1B2A41"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/buttonLimparHorario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="44dp"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="4dp"
+                android:text="Limpar"
+                android:textColor="#21BBFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rowHorarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="Abre às"
+                    android:textColor="#6B7A90"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/textHoraAbre"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:text="Selecionar"
+                    android:textColor="#9AA7B8"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="Fecha às"
+                    android:textColor="#6B7A90"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/textHoraFecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:text="Selecionar"
+                    android:textColor="#9AA7B8"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/erroHorario"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="Horario"
+            android:layout_marginTop="4dp"
+            android:textColor="#E5484D"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="14dp"
+            android:text="Dias e observações do horário (opcional)"
             android:textColor="#1B2A41"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextTelefone" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextHorario"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
             android:hint="Ex.: Seg a Sex, 8h às 18h"
+            android:importantForAutofill="no"
             android:inputType="text"
+            android:maxLength="100"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:textColor="#1B2A41"
             android:textColorHint="#9AA7B8"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textBoxHorario" />
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="6dp"
+            android:text="Se deixar em branco, mostramos apenas o intervalo escolhido acima."
+            android:textColor="#9AA7B8"
+            android:textSize="12sp" />
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="0dp"
+            android:id="@+id/buttonCadastrarLocal"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="28dp"
             android:background="@drawable/bg_button_primary"
             android:stateListAnimator="@null"
-            android:text="Registre"
+            android:text="Cadastrar local"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextHorario" />
+            android:textStyle="bold" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </ScrollView>

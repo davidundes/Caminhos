@@ -243,6 +243,14 @@ object Repository {
                 .insert(local)
         }
 
+        // Usado pelo cadastro de local: envia só as colunas preenchidas, incluindo
+        // horario_inicial e horario_final (time), sem depender do model Local.
+        suspend fun createLocal(linha: JsonObject) {
+            client
+                .from("tb_local")
+                .insert(linha)
+        }
+
         suspend fun getLocal(id: Int): Local? {
             return client
                 .from("tb_local")

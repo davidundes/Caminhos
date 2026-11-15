@@ -2,6 +2,7 @@ package com.caminhos.local
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -39,6 +40,14 @@ import kotlin.math.roundToInt
  * Recebe o extra "id_local" (Int), enviado pela localInfoWindow.
  */
 class DetalhesLocalActivity : AppCompatActivity() {
+
+    /** Um critério de acessibilidade de UMA avaliação: situação + comentário do usuário (se houver). */
+    private data class Criterio(
+        val chave: String,       // nome da coluna, ex.: "banheiro_acessivel"
+        val nome: String,        // rótulo para exibir, ex.: "Banheiro acessível"
+        val situacao: String,
+        val comentario: String?  // coluna "comentario_<chave>"
+    )
 
     private val localRepository = Repository.LocalRepository()
     private val acessibilidadeRepository = Repository.AcessibilidadeRepository()
@@ -140,7 +149,7 @@ class DetalhesLocalActivity : AppCompatActivity() {
     /** id_avaliacao -> lista de (critério, situação), lida da linha bruta de tb_acessibilidade. */
     private suspend fun buscarCriterios(
         avaliacoes: List<Avaliacao>
-    ): Map<Int, List<Pair<String, String>>> = coroutineScope {
+    ): Map<Int, List<Criterio>> = coroutineScope {
         avaliacoes
             .mapNotNull { it.id_avaliacao }
             .map { id ->
@@ -151,15 +160,26 @@ class DetalhesLocalActivity : AppCompatActivity() {
     }
 
     /**
-     * Só entram colunas cujo valor é uma das situações aceitas pelo banco
-     * (validar_criterios_acessibilidade). Assim ids, nota e colunas nulas são ignorados
-     * sem precisar listar os nomes das colunas aqui.
+     * Só entram colunas cujo valor é uma das situações aceitas pelo banco.
+     * Colunas "comentario_*" são ignoradas como critério: cada uma vira o comentário
+     * do critério correspondente (ex.: comentario_rampa -> comentário da "rampa").
      */
-    private fun extrairCriterios(linha: JsonObject?): List<Pair<String, String>> {
+    private fun extrairCriterios(linha: JsonObject?): List<Criterio> {
         if (linha == null) return emptyList()
         return linha.entries.mapNotNull { (chave, valor) ->
-            val texto = (valor as? JsonPrimitive)?.contentOrNull
-            if (texto != null && texto in SITUACOES) formatarChave(chave) to texto else null
+            if (chave.startsWith("comentario_")) return@mapNotNull null
+
+            val situacao = (valor as? JsonPrimitive)?.contentOrNull
+            if (situacao == null || situacao !in SITUACOES) return@mapNotNull null
+
+            val comentario = (linha["comentario_$chave"] as? JsonPrimitive)
+                ?.contentOrNull
+                ?.trim()
+                ?.takeIf { it.isNotEmpty() }
+
+            Criterio(chave, ROTULOS[chave] ?: formatarChave(chave), situacao, comentario)
+        }.sortedBy { c ->
+            ORDEM_CRITERIOS.indexOf(c.chave).let { i -> if (i < 0) Int.MAX_VALUE else i }
         }
     }
 
@@ -202,7 +222,7 @@ class DetalhesLocalActivity : AppCompatActivity() {
     private fun mostrarAvaliacoes(
         avaliacoes: List<Avaliacao>,
         nomes: Map<String, String>,
-        criterios: Map<Int, List<Pair<String, String>>>
+        criterios: Map<Int, List<Criterio>>
     ) {
         // Resumo (média das notas)
         val notas = avaliacoes.mapNotNull { it.nota?.toDouble() }
@@ -245,17 +265,19 @@ class DetalhesLocalActivity : AppCompatActivity() {
      * - Em caso de empate, vale a situação mais crítica (Inadequado > Não possui >
      *   Parcialmente adequado > Adequado), para não esconder um problema de acessibilidade.
      */
-    private fun mostrarResumoAcessibilidade(criterios: Map<Int, List<Pair<String, String>>>) {
+    private fun mostrarResumoAcessibilidade(criterios: Map<Int, List<Criterio>>) {
         val bloco = findViewById<View>(R.id.blocoAcessibilidadeResumo)
         val caixa = findViewById<LinearLayout>(R.id.containerAcessibilidadeResumo)
         caixa.removeAllViews()
 
-        // critério -> (situação -> nº de votos)
-        val votos = LinkedHashMap<String, MutableMap<String, Int>>()
+        val rotulos = LinkedHashMap<String, String>()                // chave -> nome exibido
+        val votos = LinkedHashMap<String, MutableMap<String, Int>>() // chave -> (situação -> votos)
+
         criterios.values.forEach { lista ->
-            lista.forEach { (criterio, situacao) ->
-                val contagem = votos.getOrPut(criterio) { mutableMapOf() }
-                contagem[situacao] = (contagem[situacao] ?: 0) + 1
+            lista.forEach { c ->
+                rotulos.putIfAbsent(c.chave, c.nome)
+                val contagem = votos.getOrPut(c.chave) { mutableMapOf() }
+                contagem[c.situacao] = (contagem[c.situacao] ?: 0) + 1
             }
         }
 
@@ -265,7 +287,7 @@ class DetalhesLocalActivity : AppCompatActivity() {
         }
         bloco.visibility = View.VISIBLE
 
-        for ((criterio, contagem) in votos) {
+        for ((chave, contagem) in votos) {
             val validos = contagem.filterKeys { it != "Não se aplica" }.ifEmpty { contagem }
             val maiorVoto = validos.values.maxOrNull() ?: continue
             val vencedora = validos
@@ -274,19 +296,19 @@ class DetalhesLocalActivity : AppCompatActivity() {
                 .minByOrNull { PRIORIDADE_EMPATE.indexOf(it) } ?: continue
             val total = contagem.values.sum()
 
-            caixa.addView(criarLinhaCriterio(criterio, vencedora, "$maiorVoto/$total"))
+            caixa.addView(criarLinhaCriterio(rotulos[chave] ?: chave, vencedora, "$maiorVoto/$total"))
         }
     }
 
     private fun criarItemAvaliacao(
         avaliacao: Avaliacao,
         nomes: Map<String, String>,
-        criterios: Map<Int, List<Pair<String, String>>>
+        criterios: Map<Int, List<Criterio>>
     ): View {
         val item = layoutInflater.inflate(R.layout.item_avaliacao_local, containerAvaliacoes, false)
 
-        item.findViewById<TextView>(R.id.textUsuarioAvaliacao).text =
-            nomes[avaliacao.id_usuario] ?: "Usuário"
+        val nomeUsuario = nomes[avaliacao.id_usuario] ?: "Usuário"
+        item.findViewById<TextView>(R.id.textUsuarioAvaliacao).text = nomeUsuario
 
         item.findViewById<TextView>(R.id.textDataAvaliacao).text =
             formatarData(avaliacao.data?.toString())
@@ -318,7 +340,11 @@ class DetalhesLocalActivity : AppCompatActivity() {
         if (lista.isEmpty()) {
             botao.visibility = View.GONE
         } else {
-            lista.forEach { (criterio, situacao) -> caixa.addView(criarLinhaCriterio(criterio, situacao)) }
+            // Cada critério mostra a situação e, logo abaixo, o comentário do usuário (se houver)
+            lista.forEach { c ->
+                caixa.addView(criarLinhaCriterio(c.nome, c.situacao))
+                if (c.comentario != null) caixa.addView(criarTextoComentario(c.comentario))
+            }
 
             val textoFechado = "Ver acessibilidade (${lista.size})"
             botao.text = textoFechado
@@ -367,6 +393,17 @@ class DetalhesLocalActivity : AppCompatActivity() {
         return linha
     }
 
+    /** Comentário do usuário sobre um critério: texto em cinza itálico, abaixo da linha do critério. */
+    private fun criarTextoComentario(texto: String): TextView {
+        return TextView(this).apply {
+            text = texto
+            setTextColor(Color.parseColor("#6B7A90"))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+            setTypeface(typeface, Typeface.ITALIC)
+            setPadding(0, 0, 0, dp(6))
+        }
+    }
+
     // -------------------------------------------------------------- helpers
 
     /** Par (cor de fundo, cor do texto). */
@@ -396,6 +433,35 @@ class DetalhesLocalActivity : AppCompatActivity() {
     private fun dp(valor: Int): Int = (valor * resources.displayMetrics.density).toInt()
 
     private companion object {
+        // Colunas de tb_acessibilidade -> nome exibido (a ordem aqui é a ordem na tela).
+        val ROTULOS = linkedMapOf(
+            "rampa" to "Rampa",
+            "elevador" to "Elevador",
+            "banheiro_acessivel" to "Banheiro acessível",
+            "piso_tatil" to "Piso tátil",
+            "vaga_pcd" to "Vaga PCD",
+            "entrada_acessivel" to "Entrada acessível",
+            "corrimao" to "Corrimão",
+            "portas_largas" to "Portas largas",
+            "sinalizacao" to "Sinalização",
+            "iluminacao" to "Iluminação",
+            "banheiro_adaptado" to "Banheiro adaptado",
+            "atendimento_prioritario" to "Atendimento prioritário",
+            "interprete_libras" to "Intérprete de Libras",
+            "cardapio_acessivel" to "Cardápio acessível",
+            "informacao_em_braille" to "Informação em braille",
+            "piso_antiderrapante" to "Piso antiderrapante",
+            "mapa_tatil" to "Mapa tátil",
+            "sinalizacao_visual" to "Sinalização visual",
+            "sinalizacao_tatil" to "Sinalização tátil",
+            "sinalizacao_sonora" to "Sinalização sonora",
+            "comunicacao_acessivel" to "Comunicação acessível",
+            "mobiliario_adaptado" to "Mobiliário adaptado",
+            "balcao_acessivel" to "Balcão acessível",
+            "acesso_cao_guia" to "Acesso para cão-guia"
+        )
+        val ORDEM_CRITERIOS = ROTULOS.keys.toList()
+
         // Ordem usada para desempate no resumo: a primeira da lista vence.
         val PRIORIDADE_EMPATE = listOf(
             "Inadequado",
